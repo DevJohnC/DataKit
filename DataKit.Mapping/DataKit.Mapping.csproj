@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.0.0-indev</Version>
+    <Authors>John Carruthers</Authors>
+    <Product>DataKit</Product>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>John Carruthers</Copyright>
+    <Description>Mapping utilities and model-to-model binding APIs.</Description>
+    <PackageProjectUrl>https://github.com/DevJohnC/DataKit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DevJohnC/DataKit</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataKit.Modelling\DataKit.Modelling.csproj" />
+  </ItemGroup>
+
+</Project>
