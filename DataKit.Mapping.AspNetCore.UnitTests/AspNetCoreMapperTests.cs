@@ -24,6 +24,24 @@ namespace DataKit.Mapping.AspNetCore.UnitTests
 			}
 		}
 
+		[TestMethod]
+		public void Can_Map_With_Binding_Override()
+		{
+			var container = TestHelpers.CreateContainerWithMappingServices(
+				services => services.Configure<MappingOptions>(options => {
+					options.AddBindingOverride<Source, TargetDependency>(
+						builder => builder.Bind(t => t.OptionalValue, s => s.Value, value => value * 2)
+						);
+				}));
+			using (var scope = container.CreateScope())
+			{
+				var mapper = scope.ServiceProvider.GetRequiredService<IObjectMapper>();
+				var src = new Source { Value = 2 };
+				var trgt = mapper.Map<Source, TargetDependency>(src);
+				Assert.AreEqual(src.Value * 2, trgt.OptionalValue);
+			}
+		}
+
 		private class Source
 		{
 			public int Value { get; set; }
@@ -43,6 +61,7 @@ namespace DataKit.Mapping.AspNetCore.UnitTests
 
 		private class TargetDependency
 		{
+			public int OptionalValue { get; set; }
 		}
 	}
 }
