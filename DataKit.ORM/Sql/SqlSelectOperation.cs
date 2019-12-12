@@ -418,8 +418,25 @@ namespace DataKit.ORM.Sql
 
 		public async Task<IReadOnlyList<TResult>> ToListAsync(CancellationToken cancellationToken = default)
 		{
+#if NETSTANDARD2_1
 			return await ToEnumerableAsync(cancellationToken)
 				.ToListAsync(cancellationToken);
+#else
+			var result = new List<TResult>();
+			using (var reader = await ExecuteQueryAsync(MapSingle, InjectSingle))
+			{
+				if (!reader.HasRows)
+					return result;
+				while (!cancellationToken.IsCancellationRequested)
+				{
+					var (success, record) = await reader.ReadNextAsync();
+					if (!success)
+						return result;
+					result.Add(record);
+				}
+			}
+			return result;
+#endif
 		}
 
 		public void Inject<TInstance>(TInstance instance)
@@ -457,9 +474,13 @@ namespace DataKit.ORM.Sql
 		public async Task<TResult> ToSingleAsync(CancellationToken cancellationToken = default)
 		{
 			Limit(1);
-			await foreach (var record in ToEnumerableAsync(cancellationToken))
+			using (var reader = await ExecuteQueryAsync(MapSingle, InjectSingle))
+			{
+				if (!reader.HasRows)
+					return default;
+				var (success, record) = await reader.ReadNextAsync();
 				return record;
-			return default;
+			}
 		}
 
 		public IEnumerable<TResult> ToEnumerable()
@@ -478,6 +499,7 @@ namespace DataKit.ORM.Sql
 			}
 		}
 
+#if NETSTANDARD2_1
 		public async IAsyncEnumerable<TResult> ToEnumerableAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
 		{
 			using (var reader = await ExecuteQueryAsync(MapSingle, InjectSingle))
@@ -493,6 +515,7 @@ namespace DataKit.ORM.Sql
 				}
 			}
 		}
+#endif
 
 		protected abstract TResult MapSingle(QueryResult queryResult);
 
