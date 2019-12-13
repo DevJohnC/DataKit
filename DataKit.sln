@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E643A3EA-B760-4F78-8FA2-76E914357EAC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataKit.ORM.AspNetCore.UnitTests", "DataKit.ORM.AspNetCore.UnitTests\DataKit.ORM.AspNetCore.UnitTests.csproj", "{3E771636-6A8A-4076-9E40-F158A74440A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{300E24E4-DA4D-40FC-BCBF-C3EDFE5E552E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{300E24E4-DA4D-40FC-BCBF-C3EDFE5E552E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{300E24E4-DA4D-40FC-BCBF-C3EDFE5E552E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E771636-6A8A-4076-9E40-F158A74440A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E771636-6A8A-4076-9E40-F158A74440A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E771636-6A8A-4076-9E40-F158A74440A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E771636-6A8A-4076-9E40-F158A74440A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +92,7 @@ Global
 		{5CC1F142-3BFF-40CF-B97F-2D4018E458C5} = {8C7E3BDE-1D56-48F3-A585-0E9E3E6D92CD}
 		{95559B95-1EAD-4D33-8B78-E4B0F1FA65E0} = {8C7E3BDE-1D56-48F3-A585-0E9E3E6D92CD}
 		{300E24E4-DA4D-40FC-BCBF-C3EDFE5E552E} = {E643A3EA-B760-4F78-8FA2-76E914357EAC}
+		{3E771636-6A8A-4076-9E40-F158A74440A9} = {8C7E3BDE-1D56-48F3-A585-0E9E3E6D92CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {315A29C1-33BD-4F03-9FF2-714B3D361F96}
