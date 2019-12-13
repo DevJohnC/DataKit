@@ -6,11 +6,11 @@ namespace DataKit.Mapping.AspNetCore.Mapping
 {
 	public class AspNetCoreMapper : ObjectMapperBase
 	{
-		private readonly MappingCache _mappings;
+		private readonly MappingProvider _mappings;
 
 		public AspNetCoreMapper(
 			IObjectFactory objectFactory,
-			MappingCache mappings
+			MappingProvider mappings
 			) : base(objectFactory)
 		{
 			_mappings = mappings;

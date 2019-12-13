@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataKit.Mapping.AspNetCore.UnitTests", "DataKit.Mapping.AspNetCore.UnitTests\DataKit.Mapping.AspNetCore.UnitTests.csproj", "{95559B95-1EAD-4D33-8B78-E4B0F1FA65E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataKit.ORM.AspNetCore", "DataKit.ORM.AspNetCore\DataKit.ORM.AspNetCore.csproj", "{300E24E4-DA4D-40FC-BCBF-C3EDFE5E552E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{95559B95-1EAD-4D33-8B78-E4B0F1FA65E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95559B95-1EAD-4D33-8B78-E4B0F1FA65E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95559B95-1EAD-4D33-8B78-E4B0F1FA65E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{300E24E4-DA4D-40FC-BCBF-C3EDFE5E552E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{300E24E4-DA4D-40FC-BCBF-C3EDFE5E552E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{300E24E4-DA4D-40FC-BCBF-C3EDFE5E552E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{300E24E4-DA4D-40FC-BCBF-C3EDFE5E552E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

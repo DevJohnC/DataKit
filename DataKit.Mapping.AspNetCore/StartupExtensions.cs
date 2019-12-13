@@ -18,7 +18,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
 			//  services for object mapping, mapper is scoped to take advantage of scoped IObjectFactory
 			//  but mappings are cached in a singleton to prevent constant generation of mappings
-			services.AddSingleton<MappingCache>();
+			services.AddSingleton<BindingProvider>();
+			services.AddSingleton<MappingProvider>();
 			services.AddScoped<IObjectMapper, AspNetCoreMapper>();
 			return services;
 		}

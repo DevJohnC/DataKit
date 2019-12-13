@@ -83,7 +83,7 @@ namespace DataKit.ORM.Sql
 			return BuildDefaultBinding<TEntity, TView>();
 		}
 
-		protected DataModelBinding<TypeModel<TSource>, PropertyField, TypeModel<TTarget>, PropertyField> BuildDefaultBinding<TSource, TTarget>()
+		protected virtual DataModelBinding<TypeModel<TSource>, PropertyField, TypeModel<TTarget>, PropertyField> BuildDefaultBinding<TSource, TTarget>()
 			where TSource : class
 			where TTarget : class
 		{
