@@ -147,7 +147,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			)
 			where TView : class
 		{
-			foreach (var fieldBinding in routedBinding.FieldBindings.Where(q => !q.TargetField.RequiresJoin))
+			foreach (var fieldBinding in routedBinding.FieldBindings.Where(q => !q.TargetField.RequiresJoin && !q.TargetField.IsServerGenerated))
 			{
 				var viewReaderConverter = new ConvertorVisitor<TView>(readerNavigator.Reader);
 				readerNavigator.TryPrepareForRead(fieldBinding.BindingSource);
