@@ -53,6 +53,12 @@ namespace DataKit.SQL.Providers
 				return base.VisitQueryParameter(queryParameterQueryExpression);
 			}
 
+			public override QueryExpression VisitIdentifier(IdentifierQueryExpression identifierQueryExpression)
+			{
+				_writer.WriteIdentifier(identifierQueryExpression, this);
+				return base.VisitIdentifier(identifierQueryExpression);
+			}
+
 			public override QueryExpression VisitFunctionCall(FunctionCallQueryExpression functionCallQueryExpression)
 			{
 				switch (functionCallQueryExpression)
@@ -62,6 +68,12 @@ namespace DataKit.SQL.Providers
 						break;
 				}
 				return base.VisitFunctionCall(functionCallQueryExpression);
+			}
+
+			public override QueryExpression VisitExtension(QueryExpression extensionQueryExpression)
+			{
+				_writer.WriteExtension(extensionQueryExpression, this);
+				return base.VisitExtension(extensionQueryExpression);
 			}
 		}
 	}

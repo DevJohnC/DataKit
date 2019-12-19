@@ -26,5 +26,15 @@
 		{
 			return functionCallQueryExpression;
 		}
+
+		public virtual QueryExpression VisitIdentifier(IdentifierQueryExpression identifierQueryExpression)
+		{
+			return identifierQueryExpression;
+		}
+
+		public virtual QueryExpression VisitExtension(QueryExpression extensionQueryExpression)
+		{
+			return extensionQueryExpression;
+		}
 	}
 }

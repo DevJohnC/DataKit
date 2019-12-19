@@ -19,6 +19,10 @@
 		/// </summary>
 		QueryParameter,
 		/// <summary>
+		/// Identifies a named item. ie, a column, an aliased projection, a table, etc.
+		/// </summary>
+		Identifier,
+		/// <summary>
 		/// An extension expression.
 		/// </summary>
 		Extension = int.MaxValue

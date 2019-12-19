@@ -1,6 +1,6 @@
 ﻿namespace DataKit.SQL.QueryExpressions
 {
-	public abstract class StatementQueryExpression : QueryExpression
+	public abstract class StatementQueryExpression : ExecutableQueryExpression
 	{
 		public override ExpressionType ExpressionType => ExpressionType.Statement;
 

@@ -17,6 +17,16 @@
 				);
 		}
 
+		public static ColumnIdentifierQueryExpression Column(string columnName, IdentifierQueryExpression parent = null)
+		{
+			return new ColumnIdentifierQueryExpression(columnName, parent);
+		}
+
+		public static TableIdentifierQueryExpression Table(string tableName)
+		{
+			return new TableIdentifierQueryExpression(tableName);
+		}
+
 		public static CountFunctionCallQueryExpression CountFunction(
 			QueryExpression expression = null
 			)

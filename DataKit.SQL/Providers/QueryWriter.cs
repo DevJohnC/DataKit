@@ -7,6 +7,8 @@ namespace DataKit.SQL.Providers
 	{
 		protected readonly StringBuilder queryText = new StringBuilder();
 
+		public ParameterBag Parameters { get; } = new ParameterBag();
+
 		public override string ToString()
 		{
 			return queryText.ToString();
@@ -17,6 +19,23 @@ namespace DataKit.SQL.Providers
 			if (queryExpression == null)
 				return;
 			queryExpressionVisitor.Visit(queryExpression);
+		}
+
+		public virtual void WriteExtension(QueryExpression queryExpression,
+			QueryExpressionVisitor queryExpressionVisitor)
+		{
+		}
+
+		public virtual void WriteIdentifier(IdentifierQueryExpression identifierQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor)
+		{
+			if (identifierQueryExpression is NestedIdentifierQueryExpression nestedIdentifierQueryExpression &&
+				nestedIdentifierQueryExpression.ParentIdentifier != null)
+			{
+				WriteIdentifier(nestedIdentifierQueryExpression.ParentIdentifier, queryExpressionVisitor);
+				queryText.Append(".");
+			}
+			queryText.Append($" [{identifierQueryExpression.IdentifierName}] ");
 		}
 
 		public virtual void WriteSelectStatement(
