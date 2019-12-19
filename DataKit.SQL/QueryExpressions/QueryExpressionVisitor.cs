@@ -32,6 +32,11 @@
 			return identifierQueryExpression;
 		}
 
+		public virtual QueryExpression VisitOperator(OperatorQueryExpression operatorQueryExpression)
+		{
+			return operatorQueryExpression;
+		}
+
 		public virtual QueryExpression VisitExtension(QueryExpression extensionQueryExpression)
 		{
 			return extensionQueryExpression;

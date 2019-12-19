@@ -1,4 +1,5 @@
 ﻿using DataKit.SQL.QueryExpressions;
+using System.Collections.Generic;
 using System.Text;
 
 namespace DataKit.SQL.Providers
@@ -14,11 +15,22 @@ namespace DataKit.SQL.Providers
 			return queryText.ToString();
 		}
 
-		protected void VisitIfNotNull(QueryExpression queryExpression, QueryExpressionVisitor queryExpressionVisitor)
+		protected void WriteIfNotNull(QueryExpression queryExpression, QueryExpressionVisitor queryExpressionVisitor)
 		{
 			if (queryExpression == null)
 				return;
 			queryExpressionVisitor.Visit(queryExpression);
+		}
+
+		protected void WriteExpressionCollection(IReadOnlyList<QueryExpression> expressions, QueryExpressionVisitor queryExpressionVisitor, string seperator = ", ", bool appendFinalSeparator = false)
+		{
+			var count = expressions.Count;
+			for (var i = 0; i < count; i++)
+			{
+				WriteIfNotNull(expressions[i], queryExpressionVisitor);
+				if (appendFinalSeparator || i < count - 1)
+					queryText.Append(seperator);
+			}
 		}
 
 		public virtual void WriteExtension(QueryExpression queryExpression,
@@ -48,15 +60,15 @@ namespace DataKit.SQL.Providers
 				throw new ProjectionMissingException("SELECT query must include a projection.");
 			queryExpressionVisitor.Visit(selectStatementQueryExpression.Projection);
 
-			VisitIfNotNull(selectStatementQueryExpression.From, queryExpressionVisitor);
+			WriteIfNotNull(selectStatementQueryExpression.From, queryExpressionVisitor);
 
 			//  joins
 
-			VisitIfNotNull(selectStatementQueryExpression.Where, queryExpressionVisitor);
+			WriteIfNotNull(selectStatementQueryExpression.Where, queryExpressionVisitor);
 
 			//  group by
 
-			VisitIfNotNull(selectStatementQueryExpression.Having, queryExpressionVisitor);
+			WriteIfNotNull(selectStatementQueryExpression.Having, queryExpressionVisitor);
 
 			//  order by
 
@@ -69,15 +81,7 @@ namespace DataKit.SQL.Providers
 			ProjectionQueryExpression projectionQueryExpression,
 			QueryExpressionVisitor queryExpressionVisitor)
 		{
-			var count = projectionQueryExpression.Expressions.Length;
-			var i = 0;
-			foreach (var expression in projectionQueryExpression.Expressions)
-			{
-				i++;
-				queryExpressionVisitor.Visit(expression);
-				if (i < count)
-					queryText.Append(", ");
-			}
+			WriteExpressionCollection(projectionQueryExpression.Expressions, queryExpressionVisitor);
 		}
 
 		public virtual void WriteFromQueryParameter(
@@ -104,12 +108,40 @@ namespace DataKit.SQL.Providers
 			queryExpressionVisitor.Visit(whereQueryExpression.Having);
 		}
 
+		public virtual void WriteAsOperator(
+			AsOperatorQueryExpression asFunctionCallQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryExpressionVisitor.Visit(asFunctionCallQueryExpression.Expression);
+			queryText.Append(" AS ");
+			WriteIdentifier(asFunctionCallQueryExpression.Alias, queryExpressionVisitor);
+		}
+
+		public virtual void WriteIsInOperator(
+			IsInOperatorQueryExpression isInFunctionCallQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryExpressionVisitor.Visit(isInFunctionCallQueryExpression.Expression);
+			queryText.Append(" IN ");
+			var expressionsAreQueries = isInFunctionCallQueryExpression.InExpressions[0] is ExecutableQueryExpression;
+			if (!expressionsAreQueries)
+				queryText.Append("(");
+
+			WriteExpressionCollection(isInFunctionCallQueryExpression.InExpressions, queryExpressionVisitor);
+
+			if (!expressionsAreQueries)
+				queryText.Append(")");
+			queryText.Append(" ");
+		}
+
 		public virtual void WriteCountFunction(
 			CountFunctionCallQueryExpression countFunctionCallQueryExpression,
 			QueryExpressionVisitor queryExpressionVisitor)
 		{
 			queryText.Append(" COUNT(");
-			VisitIfNotNull(countFunctionCallQueryExpression.Expression, queryExpressionVisitor);
+			WriteIfNotNull(countFunctionCallQueryExpression.Expression, queryExpressionVisitor);
 			queryText.Append(") ");
 		}
 	}

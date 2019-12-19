@@ -70,6 +70,20 @@ namespace DataKit.SQL.Providers
 				return base.VisitFunctionCall(functionCallQueryExpression);
 			}
 
+			public override QueryExpression VisitOperator(OperatorQueryExpression operatorQueryExpression)
+			{
+				switch (operatorQueryExpression)
+				{
+					case AsOperatorQueryExpression @as:
+						_writer.WriteAsOperator(@as, this);
+						break;
+					case IsInOperatorQueryExpression isIn:
+						_writer.WriteIsInOperator(isIn, this);
+						break;
+				}
+				return base.VisitOperator(operatorQueryExpression);
+			}
+
 			public override QueryExpression VisitExtension(QueryExpression extensionQueryExpression)
 			{
 				_writer.WriteExtension(extensionQueryExpression, this);

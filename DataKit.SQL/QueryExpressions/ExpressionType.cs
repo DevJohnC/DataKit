@@ -23,6 +23,10 @@
 		/// </summary>
 		Identifier,
 		/// <summary>
+		/// Operators such as IN, AS, DISTINCT, etc.
+		/// </summary>
+		Operator,
+		/// <summary>
 		/// An extension expression.
 		/// </summary>
 		Extension = int.MaxValue
