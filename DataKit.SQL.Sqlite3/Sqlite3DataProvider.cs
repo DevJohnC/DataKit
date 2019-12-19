@@ -50,51 +50,17 @@ namespace DataKit.SQL.Sqlite3
 			return connection;
 		}
 
-		protected override DbConnection OpenConnection()
-			=> _connectionOverride ?? CreateConnection();
+		protected override IConnectionLease OpenConnection()
+			=> _connectionOverride != null ?
+				(IConnectionLease)new RemainOpenConnectionLease(_connectionOverride) :
+				new ClosingConnectionLease(CreateConnection());
 
-		protected override Task<DbConnection> OpenConnectionAsync(CancellationToken cancellationToken)
+		protected override Task<IConnectionLease> OpenConnectionAsync(CancellationToken cancellationToken)
 			=> Task.FromResult(OpenConnection());
 
 		protected override QueryWriter CreateQueryWriter()
 		{
 			return new Sqlite3QueryWriter(_convertGuidsToText);
-		}
-
-		public override QueryResult ExecuteReader(ExecutableQueryExpression query)
-		{
-			var (sql, parameters) = ConvertQuery(query);
-			var connection = OpenConnection();
-			var command = CreateCommand(connection, sql, parameters);
-			try
-			{
-				var reader = command.ExecuteReader();
-				return new QueryResult(command, reader, _connectionOverride == null ? connection : null);
-			}
-			catch
-			{
-				command.Dispose();
-				connection.Dispose();
-				throw;
-			}
-		}
-
-		public override async Task<QueryResult> ExecuteReaderAsync(ExecutableQueryExpression query, CancellationToken cancellationToken = default)
-		{
-			var (sql, parameters) = ConvertQuery(query);
-			var connection = await OpenConnectionAsync(cancellationToken);
-			var command = CreateCommand(connection, sql, parameters);
-			try
-			{
-				var reader = await command.ExecuteReaderAsync(cancellationToken);
-				return new QueryResult(command, reader, _connectionOverride == null ? connection : null);
-			}
-			catch
-			{
-				command.Dispose();
-				connection.Dispose();
-				throw;
-			}
 		}
 
 		public void Dispose()

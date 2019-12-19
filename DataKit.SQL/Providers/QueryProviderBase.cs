@@ -18,8 +18,8 @@ namespace DataKit.SQL.Providers
 			return (writer.ToString(), writer.Parameters);
 		}
 
-		protected abstract DbConnection OpenConnection();
-		protected abstract Task<DbConnection> OpenConnectionAsync(CancellationToken cancellationToken);
+		protected abstract IConnectionLease OpenConnection();
+		protected abstract Task<IConnectionLease> OpenConnectionAsync(CancellationToken cancellationToken);
 
 		protected virtual DbCommand CreateCommand(DbConnection dbConnection, string sql, ParameterBag parameters)
 		{
@@ -41,8 +41,8 @@ namespace DataKit.SQL.Providers
 		public int ExecuteNonQuery(ExecutableQueryExpression query)
 		{
 			var (sql, parameters) = ConvertQuery(query);
-			using (var connection = OpenConnection())
-			using (var command = CreateCommand(connection, sql, parameters))
+			using (var lease = OpenConnection())
+			using (var command = CreateCommand(lease.Connection, sql, parameters))
 			{
 				return command.ExecuteNonQuery();
 			}
@@ -51,8 +51,8 @@ namespace DataKit.SQL.Providers
 		public async Task<int> ExecuteNonQueryAsync(ExecutableQueryExpression query, CancellationToken cancellationToken = default)
 		{
 			var (sql, parameters) = ConvertQuery(query);
-			using (var connection = await OpenConnectionAsync(cancellationToken))
-			using (var command = CreateCommand(connection, sql, parameters))
+			using (var lease = await OpenConnectionAsync(cancellationToken))
+			using (var command = CreateCommand(lease.Connection, sql, parameters))
 			{
 				return await command.ExecuteNonQueryAsync(cancellationToken);
 			}
@@ -61,17 +61,17 @@ namespace DataKit.SQL.Providers
 		public virtual QueryResult ExecuteReader(ExecutableQueryExpression query)
 		{
 			var (sql, parameters) = ConvertQuery(query);
-			var connection = OpenConnection();
-			var command = CreateCommand(connection, sql, parameters);
+			var lease = OpenConnection();
+			var command = CreateCommand(lease.Connection, sql, parameters);
 			try
 			{
 				var reader = command.ExecuteReader();
-				return new QueryResult(command, reader, connection);
+				return new QueryResult(command, reader, lease);
 			}
 			catch
 			{
 				command.Dispose();
-				connection.Dispose();
+				lease.Dispose();
 				throw;
 			}
 		}
@@ -79,17 +79,17 @@ namespace DataKit.SQL.Providers
 		public virtual async Task<QueryResult> ExecuteReaderAsync(ExecutableQueryExpression query, CancellationToken cancellationToken = default)
 		{
 			var (sql, parameters) = ConvertQuery(query);
-			var connection = await OpenConnectionAsync(cancellationToken);
-			var command = CreateCommand(connection, sql, parameters);
+			var lease = await OpenConnectionAsync(cancellationToken);
+			var command = CreateCommand(lease.Connection, sql, parameters);
 			try
 			{
 				var reader = await command.ExecuteReaderAsync(cancellationToken);
-				return new QueryResult(command, reader, connection);
+				return new QueryResult(command, reader, lease);
 			}
 			catch
 			{
 				command.Dispose();
-				connection.Dispose();
+				lease.Dispose();
 				throw;
 			}
 		}

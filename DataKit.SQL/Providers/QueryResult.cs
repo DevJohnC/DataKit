@@ -10,7 +10,7 @@ namespace DataKit.SQL.Providers
 	{
 		private readonly DbCommand _command;
 		private readonly DbDataReader _reader;
-		private readonly DbConnection _connection;
+		private readonly IConnectionLease _connectionLease;
 
 		public bool HasRows => _reader.HasRows;
 
@@ -18,18 +18,18 @@ namespace DataKit.SQL.Providers
 
 		public int RecordsAffected => _reader.RecordsAffected;
 
-		public QueryResult(DbCommand command, DbDataReader reader, DbConnection dbConnection)
+		public QueryResult(DbCommand command, DbDataReader reader, IConnectionLease connectionLease)
 		{
 			_command = command;
 			_reader = reader;
-			_connection = dbConnection;
+			_connectionLease = connectionLease;
 		}
 
 		public void Dispose()
 		{
 			_reader.Dispose();
 			_command.Dispose();
-			_connection?.Dispose();
+			_connectionLease.Dispose();
 		}
 
 		public bool GetBoolean(int ordinal)

@@ -15,7 +15,7 @@ namespace DataKit.SQL.Sqlite3.Tests
 					"CREATE TABLE TestTable (Value TEXT)"
 					));
 				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw(
-					"INSERT INTO TestTable Value='Hello World'"
+					"INSERT INTO TestTable VALUES ('Hello World')"
 					));
 
 				var table = QueryExpression.Table("TestTable");
