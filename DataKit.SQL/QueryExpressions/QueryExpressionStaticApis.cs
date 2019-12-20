@@ -61,6 +61,16 @@ namespace DataKit.SQL.QueryExpressions
 			return new IsInOperatorQueryExpression(expression, inExpressions, true);
 		}
 
+		public static UnaryOperatorQueryExpression IsNull(QueryExpression expression)
+		{
+			return new UnaryOperatorQueryExpression(expression, UnaryOperator.IsNull);
+		}
+
+		public static UnaryOperatorQueryExpression IsNotNull(QueryExpression expression)
+		{
+			return new UnaryOperatorQueryExpression(expression, UnaryOperator.IsNotNull);
+		}
+
 		public static ColumnIdentifierQueryExpression All(IdentifierQueryExpression parent = null)
 		{
 			return Column("*", parent);

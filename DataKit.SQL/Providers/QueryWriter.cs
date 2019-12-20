@@ -141,6 +141,23 @@ namespace DataKit.SQL.Providers
 			queryText.Append(" ");
 		}
 
+		public virtual void WriteUnaryOperator(
+			UnaryOperatorQueryExpression unaryOperatorQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			WriteIfNotNull(unaryOperatorQueryExpression.Expression, queryExpressionVisitor);
+			switch (unaryOperatorQueryExpression.Operator)
+			{
+				case UnaryOperator.IsNull:
+					queryText.Append(" IS NULL ");
+					break;
+				case UnaryOperator.IsNotNull:
+					queryText.Append(" IS NOT NULL ");
+					break;
+			}
+		}
+
 		public virtual void WriteBinaryOperator(
 			BinaryOperatorQueryExpression binaryOperatorQueryExpression,
 			QueryExpressionVisitor queryExpressionVisitor

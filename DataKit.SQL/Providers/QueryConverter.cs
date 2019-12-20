@@ -80,6 +80,9 @@ namespace DataKit.SQL.Providers
 					case IsInOperatorQueryExpression isIn:
 						_writer.WriteIsInOperator(isIn, this);
 						break;
+					case UnaryOperatorQueryExpression unary:
+						_writer.WriteUnaryOperator(unary, this);
+						break;
 					case BinaryOperatorQueryExpression binary:
 						_writer.WriteBinaryOperator(binary, this);
 						break;

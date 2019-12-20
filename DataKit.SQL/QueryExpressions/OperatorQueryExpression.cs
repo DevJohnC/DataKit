@@ -36,7 +36,20 @@ namespace DataKit.SQL.QueryExpressions
 
 		public QueryExpression Expression { get; }
 		public QueryExpression[] InExpressions { get; }
-		public bool IsNotIn { get; }
+		public new bool IsNotIn { get; }
+	}
+
+	public class UnaryOperatorQueryExpression : OperatorQueryExpression
+	{
+		public UnaryOperatorQueryExpression(QueryExpression expression, UnaryOperator @operator)
+		{
+			Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+			Operator = @operator;
+		}
+
+		public QueryExpression Expression { get; }
+
+		public UnaryOperator Operator { get; }
 	}
 
 	public class BinaryOperatorQueryExpression : OperatorQueryExpression
@@ -51,6 +64,12 @@ namespace DataKit.SQL.QueryExpressions
 		public QueryExpression Left { get; }
 		public QueryExpression Right { get; }
 		public BinaryOperator Operator { get; }
+	}
+
+	public enum UnaryOperator
+	{
+		IsNull,
+		IsNotNull
 	}
 
 	public enum BinaryOperator
