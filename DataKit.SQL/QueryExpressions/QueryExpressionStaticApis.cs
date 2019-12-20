@@ -43,7 +43,22 @@ namespace DataKit.SQL.QueryExpressions
 
 		public static IsInOperatorQueryExpression IsIn(QueryExpression expression, params QueryExpression[] inExpressions)
 		{
-			return new IsInOperatorQueryExpression(expression, inExpressions);
+			return new IsInOperatorQueryExpression(expression, inExpressions, false);
+		}
+
+		public static IsInOperatorQueryExpression IsNotIn(QueryExpression expression, SelectStatementQueryExpression selectQuery)
+		{
+			return IsNotIn(expression, new[] { selectQuery });
+		}
+
+		public static IsInOperatorQueryExpression IsNotIn(QueryExpression expression, IEnumerable<QueryExpression> inExpressions)
+		{
+			return IsNotIn(expression, inExpressions.ToArray());
+		}
+
+		public static IsInOperatorQueryExpression IsNotIn(QueryExpression expression, params QueryExpression[] inExpressions)
+		{
+			return new IsInOperatorQueryExpression(expression, inExpressions, true);
 		}
 
 		public static ColumnIdentifierQueryExpression All(IdentifierQueryExpression parent = null)

@@ -128,6 +128,8 @@ namespace DataKit.SQL.Providers
 		{
 			queryExpressionVisitor.Visit(isInFunctionCallQueryExpression.Expression);
 			queryText.Append(" IN ");
+			if (isInFunctionCallQueryExpression.IsNotIn)
+				queryText.Append("NOT ");
 			var expressionsAreQueries = isInFunctionCallQueryExpression.InExpressions[0] is ExecutableQueryExpression;
 			if (!expressionsAreQueries)
 				queryText.Append("(");

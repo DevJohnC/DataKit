@@ -24,16 +24,19 @@ namespace DataKit.SQL.QueryExpressions
 
 	public class IsInOperatorQueryExpression : OperatorQueryExpression
 	{
-		public IsInOperatorQueryExpression(QueryExpression expression, QueryExpression[] inExpressions)
+		public IsInOperatorQueryExpression(QueryExpression expression, QueryExpression[] inExpressions,
+			bool isNotIn)
 		{
 			Expression = expression ?? throw new ArgumentNullException(nameof(expression));
 			InExpressions = inExpressions ?? throw new ArgumentNullException(nameof(inExpressions));
 			if (inExpressions.Length == 0)
 				throw new ArgumentException("Must provide at least 1 expression.", nameof(inExpressions));
+			IsNotIn = isNotIn;
 		}
 
 		public QueryExpression Expression { get; }
 		public QueryExpression[] InExpressions { get; }
+		public bool IsNotIn { get; }
 	}
 
 	public class BinaryOperatorQueryExpression : OperatorQueryExpression
