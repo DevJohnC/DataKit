@@ -38,6 +38,11 @@ namespace DataKit.SQL.Providers
 		{
 		}
 
+		public virtual void WriteParameterName(string parameterName)
+		{
+			queryText.Append($" @{parameterName} ");
+		}
+
 		public virtual void WriteIdentifier(IdentifierQueryExpression identifierQueryExpression,
 			QueryExpressionVisitor queryExpressionVisitor)
 		{

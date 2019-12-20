@@ -37,6 +37,11 @@
 			return operatorQueryExpression;
 		}
 
+		public virtual QueryExpression VisitParameter(ParameterQueryExpression parameterQueryExpression)
+		{
+			return parameterQueryExpression;
+		}
+
 		public virtual QueryExpression VisitExtension(QueryExpression extensionQueryExpression)
 		{
 			return extensionQueryExpression;

@@ -90,6 +90,21 @@ namespace DataKit.SQL.Providers
 				return base.VisitOperator(operatorQueryExpression);
 			}
 
+			public override QueryExpression VisitParameter(ParameterQueryExpression parameterQueryExpression)
+			{
+				switch (parameterQueryExpression)
+				{
+					case ParameterReferenceQueryExpression parameter:
+						_writer.WriteParameterName(parameter.ParameterName);
+						break;
+					case ValueParameterQueryExpression value:
+						var parameterName = _writer.Parameters.Add(value.Value);
+						_writer.WriteParameterName(parameterName);
+						break;
+				}
+				return base.VisitParameter(parameterQueryExpression);
+			}
+
 			public override QueryExpression VisitExtension(QueryExpression extensionQueryExpression)
 			{
 				_writer.WriteExtension(extensionQueryExpression, this);

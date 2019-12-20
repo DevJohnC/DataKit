@@ -30,7 +30,7 @@ namespace DataKit.SQL.Providers
 				foreach (var kvp in parameters)
 				{
 					var parameter = command.CreateParameter();
-					parameter.ParameterName = kvp.Key;
+					parameter.ParameterName = $"@{kvp.Key}";
 					parameter.Value = kvp.Value ?? DBNull.Value;
 					command.Parameters.Add(parameter);
 				}
@@ -38,31 +38,31 @@ namespace DataKit.SQL.Providers
 			return command;
 		}
 
-		public int ExecuteNonQuery(ExecutableQueryExpression query)
+		public int ExecuteNonQuery(ExecutableQueryExpression query, ParameterBag parameters = null)
 		{
-			var (sql, parameters) = ConvertQuery(query);
+			var (sql, autoParameters) = ConvertQuery(query);
 			using (var lease = OpenConnection())
-			using (var command = CreateCommand(lease.Connection, sql, parameters))
+			using (var command = CreateCommand(lease.Connection, sql, ParameterBag.Combine(autoParameters, parameters)))
 			{
 				return command.ExecuteNonQuery();
 			}
 		}
 
-		public async Task<int> ExecuteNonQueryAsync(ExecutableQueryExpression query, CancellationToken cancellationToken = default)
+		public async Task<int> ExecuteNonQueryAsync(ExecutableQueryExpression query, ParameterBag parameters = null, CancellationToken cancellationToken = default)
 		{
-			var (sql, parameters) = ConvertQuery(query);
+			var (sql, autoParameters) = ConvertQuery(query);
 			using (var lease = await OpenConnectionAsync(cancellationToken))
-			using (var command = CreateCommand(lease.Connection, sql, parameters))
+			using (var command = CreateCommand(lease.Connection, sql, ParameterBag.Combine(autoParameters, parameters)))
 			{
 				return await command.ExecuteNonQueryAsync(cancellationToken);
 			}
 		}
 
-		public virtual QueryResult ExecuteReader(ExecutableQueryExpression query)
+		public virtual QueryResult ExecuteReader(ExecutableQueryExpression query, ParameterBag parameters = null)
 		{
-			var (sql, parameters) = ConvertQuery(query);
+			var (sql, autoParameters) = ConvertQuery(query);
 			var lease = OpenConnection();
-			var command = CreateCommand(lease.Connection, sql, parameters);
+			var command = CreateCommand(lease.Connection, sql, ParameterBag.Combine(autoParameters, parameters));
 			try
 			{
 				var reader = command.ExecuteReader();
@@ -76,11 +76,11 @@ namespace DataKit.SQL.Providers
 			}
 		}
 
-		public virtual async Task<QueryResult> ExecuteReaderAsync(ExecutableQueryExpression query, CancellationToken cancellationToken = default)
+		public virtual async Task<QueryResult> ExecuteReaderAsync(ExecutableQueryExpression query, ParameterBag parameters = null, CancellationToken cancellationToken = default)
 		{
-			var (sql, parameters) = ConvertQuery(query);
+			var (sql, autoParameters) = ConvertQuery(query);
 			var lease = await OpenConnectionAsync(cancellationToken);
-			var command = CreateCommand(lease.Connection, sql, parameters);
+			var command = CreateCommand(lease.Connection, sql, ParameterBag.Combine(autoParameters, parameters));
 			try
 			{
 				var reader = await command.ExecuteReaderAsync(cancellationToken);

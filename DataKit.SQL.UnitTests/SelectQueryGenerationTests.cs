@@ -1,6 +1,7 @@
 ﻿using DataKit.SQL.Providers;
 using DataKit.SQL.QueryExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace DataKit.SQL.UnitTests
 {
@@ -70,11 +71,43 @@ namespace DataKit.SQL.UnitTests
 			Assert.AreEqual("SELECT * FROM [TestTable] WHERE ([Left] = [Right] AND ([Left] = [Right] OR [Left] != [Right]))", sql);
 		}
 
+		[TestMethod]
+		public void Can_Write_Select_With_Parameter_Reference()
+		{
+			var queryExpression = QueryExpression.SelectStatement(
+				new[] { QueryExpression.All() },
+				from: QueryExpression.Table("TestTable"),
+				where: QueryExpression.AreEqual(QueryExpression.Column("Column"), QueryExpression.Parameter("myParameter"))
+				);
+			var sql = ConvertToSql(queryExpression);
+			Assert.AreEqual("SELECT * FROM [TestTable] WHERE [Column] = @myParameter", sql);
+		}
+
+		[TestMethod]
+		public void Can_Write_Select_With_Value()
+		{
+			var queryExpression = QueryExpression.SelectStatement(
+				new[] { QueryExpression.All() },
+				from: QueryExpression.Table("TestTable"),
+				where: QueryExpression.AreEqual(QueryExpression.Column("Column"), QueryExpression.Value("myValue"))
+				);
+			var sql = ConvertToSql(queryExpression, out var parameters);
+			var firstParameter = parameters.First();
+			Assert.AreEqual("myValue", firstParameter.Value);
+			Assert.AreEqual($"SELECT * FROM [TestTable] WHERE [Column] = @{firstParameter.Key}", sql);
+		}
+
 		private string ConvertToSql(QueryExpression queryExpression)
+		{
+			return ConvertToSql(queryExpression, out var _);
+		}
+
+		private string ConvertToSql(QueryExpression queryExpression, out ParameterBag valueParameters)
 		{
 			var queryWriter = new QueryWriter();
 			var converter = new QueryConverter();
 			converter.WriteQuery(queryWriter, queryExpression);
+			valueParameters = queryWriter.Parameters;
 			return queryWriter.ToString().ReduceWhitespace().Trim();
 		}
 	}

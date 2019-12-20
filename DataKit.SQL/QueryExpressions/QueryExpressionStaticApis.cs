@@ -20,6 +20,16 @@ namespace DataKit.SQL.QueryExpressions
 				);
 		}
 
+		public static ParameterReferenceQueryExpression Parameter(string parameterName)
+		{
+			return new ParameterReferenceQueryExpression(parameterName);
+		}
+
+		public static ValueParameterQueryExpression Value(object value)
+		{
+			return new ValueParameterQueryExpression(value);
+		}
+
 		public static AsOperatorQueryExpression As(QueryExpression expression, AliasIdentifierQueryExpression alias)
 		{
 			return new AsOperatorQueryExpression(expression, alias);

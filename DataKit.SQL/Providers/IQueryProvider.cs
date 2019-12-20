@@ -6,10 +6,10 @@ namespace DataKit.SQL.Providers
 {
 	public interface IQueryProvider
 	{
-		int ExecuteNonQuery(ExecutableQueryExpression query);
-		Task<int> ExecuteNonQueryAsync(ExecutableQueryExpression query, CancellationToken cancellationToken = default);
+		int ExecuteNonQuery(ExecutableQueryExpression query, ParameterBag parameters = null);
+		Task<int> ExecuteNonQueryAsync(ExecutableQueryExpression query, ParameterBag parameters = null, CancellationToken cancellationToken = default);
 
-		QueryResult ExecuteReader(ExecutableQueryExpression query);
-		Task<QueryResult> ExecuteReaderAsync(ExecutableQueryExpression query, CancellationToken cancellationToken = default);
+		QueryResult ExecuteReader(ExecutableQueryExpression query, ParameterBag parameters = null);
+		Task<QueryResult> ExecuteReaderAsync(ExecutableQueryExpression query, ParameterBag parameters = null, CancellationToken cancellationToken = default);
 	}
 }

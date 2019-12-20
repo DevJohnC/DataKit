@@ -27,6 +27,10 @@
 		/// </summary>
 		Operator,
 		/// <summary>
+		/// Parameters.
+		/// </summary>
+		Parameter,
+		/// <summary>
 		/// An extension expression.
 		/// </summary>
 		Extension = int.MaxValue
