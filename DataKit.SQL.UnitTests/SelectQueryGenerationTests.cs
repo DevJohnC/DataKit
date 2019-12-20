@@ -53,6 +53,23 @@ namespace DataKit.SQL.UnitTests
 			Assert.AreEqual("SELECT [Column] IN SELECT [Id] FROM [OtherTable] FROM [TestTable]", sql);
 		}
 
+		[TestMethod]
+		public void Can_Write_Select_With_Nested_Conditions()
+		{
+			var queryExpression = QueryExpression.SelectStatement(
+				new[] { QueryExpression.All() },
+				from: QueryExpression.Table("TestTable"),
+				where: QueryExpression.AndAlso(
+					QueryExpression.AreEqual(QueryExpression.Column("Left"), QueryExpression.Column("Right")),
+					QueryExpression.OrElse(
+						QueryExpression.AreEqual(QueryExpression.Column("Left"), QueryExpression.Column("Right")),
+						QueryExpression.AreNotEqual(QueryExpression.Column("Left"), QueryExpression.Column("Right"))
+					))
+				);
+			var sql = ConvertToSql(queryExpression);
+			Assert.AreEqual("SELECT * FROM [TestTable] WHERE ([Left] = [Right] AND ([Left] = [Right] OR [Left] != [Right]))", sql);
+		}
+
 		private string ConvertToSql(QueryExpression queryExpression)
 		{
 			var queryWriter = new QueryWriter();

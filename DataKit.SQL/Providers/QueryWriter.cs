@@ -47,7 +47,10 @@ namespace DataKit.SQL.Providers
 				WriteIdentifier(nestedIdentifierQueryExpression.ParentIdentifier, queryExpressionVisitor);
 				queryText.Append(".");
 			}
-			queryText.Append($" [{identifierQueryExpression.IdentifierName}] ");
+			if (identifierQueryExpression.IdentifierName == "*")
+				queryText.Append(" * ");
+			else
+				queryText.Append($" [{identifierQueryExpression.IdentifierName}] ");
 		}
 
 		public virtual void WriteSelectStatement(
@@ -134,6 +137,85 @@ namespace DataKit.SQL.Providers
 			if (!expressionsAreQueries)
 				queryText.Append(")");
 			queryText.Append(" ");
+		}
+
+		public virtual void WriteBinaryOperator(
+			BinaryOperatorQueryExpression binaryOperatorQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			if (binaryOperatorQueryExpression.Operator == BinaryOperator.AndAlso ||
+				binaryOperatorQueryExpression.Operator == BinaryOperator.OrElse)
+				queryText.Append(" (");
+
+			WriteIfNotNull(binaryOperatorQueryExpression.Left, queryExpressionVisitor);
+
+			switch (binaryOperatorQueryExpression.Operator)
+			{
+				case BinaryOperator.Addition:
+					queryText.Append(" + ");
+					break;
+				case BinaryOperator.Subtraction:
+					queryText.Append(" - ");
+					break;
+				case BinaryOperator.Division:
+					queryText.Append(" / ");
+					break;
+				case BinaryOperator.Multiplication:
+					queryText.Append(" * ");
+					break;
+				case BinaryOperator.Modulus:
+					queryText.Append(" % ");
+					break;
+
+				case BinaryOperator.AndAlso:
+					queryText.Append(" AND ");
+					break;
+				case BinaryOperator.OrElse:
+					queryText.Append(" OR ");
+					break;
+
+				case BinaryOperator.AreEqual:
+					queryText.Append(" = ");
+					break;
+				case BinaryOperator.AreNotEqual:
+					queryText.Append(" != ");
+					break;
+				case BinaryOperator.GreaterThan:
+					queryText.Append(" > ");
+					break;
+				case BinaryOperator.GreaterThanOrEqualTo:
+					queryText.Append(" >= ");
+					break;
+				case BinaryOperator.LessThan:
+					queryText.Append(" < ");
+					break;
+				case BinaryOperator.LessThanOrEqualTo:
+					queryText.Append(" <= ");
+					break;
+				case BinaryOperator.Like:
+					queryText.Append(" LIKE ");
+					break;
+				case BinaryOperator.NotLike:
+					queryText.Append(" NOT LIKE ");
+					break;
+
+				case BinaryOperator.BitwiseAnd:
+					queryText.Append(" & ");
+					break;
+				case BinaryOperator.BitwiseOr:
+					queryText.Append(" | ");
+					break;
+				case BinaryOperator.BitwiseExclusiveOr:
+					queryText.Append(" ^ ");
+					break;
+			}
+
+			WriteIfNotNull(binaryOperatorQueryExpression.Right, queryExpressionVisitor);
+
+			if (binaryOperatorQueryExpression.Operator == BinaryOperator.AndAlso ||
+				binaryOperatorQueryExpression.Operator == BinaryOperator.OrElse)
+				queryText.Append(") ");
 		}
 
 		public virtual void WriteCountFunction(

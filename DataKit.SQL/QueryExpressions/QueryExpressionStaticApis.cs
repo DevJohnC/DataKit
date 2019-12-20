@@ -46,6 +46,101 @@ namespace DataKit.SQL.QueryExpressions
 			return new IsInOperatorQueryExpression(expression, inExpressions);
 		}
 
+		public static ColumnIdentifierQueryExpression All(IdentifierQueryExpression parent = null)
+		{
+			return Column("*", parent);
+		}
+
+		public static BinaryOperatorQueryExpression AndAlso(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.AndAlso);
+		}
+
+		public static BinaryOperatorQueryExpression OrElse(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.OrElse);
+		}
+
+		public static BinaryOperatorQueryExpression And(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.BitwiseAnd);
+		}
+
+		public static BinaryOperatorQueryExpression Or(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.BitwiseOr);
+		}
+
+		public static BinaryOperatorQueryExpression ExclusiveOr(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.BitwiseExclusiveOr);
+		}
+
+		public static BinaryOperatorQueryExpression Add(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.Addition);
+		}
+
+		public static BinaryOperatorQueryExpression Subtract(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.Subtraction);
+		}
+
+		public static BinaryOperatorQueryExpression Divide(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.Division);
+		}
+
+		public static BinaryOperatorQueryExpression Multiply(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.Multiplication);
+		}
+
+		public static BinaryOperatorQueryExpression Modulus(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.Modulus);
+		}
+
+		public static BinaryOperatorQueryExpression AreEqual(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.AreEqual);
+		}
+
+		public static BinaryOperatorQueryExpression AreNotEqual(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.AreNotEqual);
+		}
+
+		public static BinaryOperatorQueryExpression GreaterThan(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.GreaterThan);
+		}
+
+		public static BinaryOperatorQueryExpression GreaterThanOrEqualTo(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.GreaterThanOrEqualTo);
+		}
+
+		public static BinaryOperatorQueryExpression LessThan(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.LessThan);
+		}
+
+		public static BinaryOperatorQueryExpression LessThanOrEqualTo(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.LessThanOrEqualTo);
+		}
+
+		public static BinaryOperatorQueryExpression Like(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.Like);
+		}
+
+		public static BinaryOperatorQueryExpression NotLike(QueryExpression left, QueryExpression right)
+		{
+			return new BinaryOperatorQueryExpression(left, right, BinaryOperator.NotLike);
+		}
+
 		public static ColumnIdentifierQueryExpression Column(string columnName, IdentifierQueryExpression parent = null)
 		{
 			return new ColumnIdentifierQueryExpression(columnName, parent);

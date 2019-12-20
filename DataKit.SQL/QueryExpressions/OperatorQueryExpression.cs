@@ -35,4 +35,43 @@ namespace DataKit.SQL.QueryExpressions
 		public QueryExpression Expression { get; }
 		public QueryExpression[] InExpressions { get; }
 	}
+
+	public class BinaryOperatorQueryExpression : OperatorQueryExpression
+	{
+		public BinaryOperatorQueryExpression(QueryExpression left, QueryExpression right, BinaryOperator @operator)
+		{
+			Left = left ?? throw new ArgumentNullException(nameof(left));
+			Right = right ?? throw new ArgumentNullException(nameof(right));
+			Operator = @operator;
+		}
+
+		public QueryExpression Left { get; }
+		public QueryExpression Right { get; }
+		public BinaryOperator Operator { get; }
+	}
+
+	public enum BinaryOperator
+	{
+		AreEqual,
+		AreNotEqual,
+		GreaterThan,
+		LessThan,
+		GreaterThanOrEqualTo,
+		LessThanOrEqualTo,
+		Like,
+		NotLike,
+
+		AndAlso,
+		OrElse,
+
+		Addition,
+		Subtraction,
+		Multiplication,
+		Division,
+		Modulus,
+
+		BitwiseAnd,
+		BitwiseOr,
+		BitwiseExclusiveOr
+	}
 }
