@@ -49,6 +49,21 @@ namespace DataKit.SQL.Providers
 					case HavingQueryExpression having:
 						_writer.WriteHavingQueryParameters(having, this);
 						break;
+					case OrderByCollectionQueryExpression orderByCollection:
+						_writer.WriteOrderByQueryParameter(orderByCollection, this);
+						break;
+					case OrderByQueryExpression orderBy:
+						_writer.WriteOrderByExpressionQueryParameter(orderBy, this);
+						break;
+					case GroupByCollectionQueryExpression groupByCollection:
+						_writer.WriteGroupByQueryParameter(groupByCollection, this);
+						break;
+					case GroupByQueryExpression groupBy:
+						_writer.WriteGroupByExpressionQueryParameter(groupBy, this);
+						break;
+					case LimitQueryExpression limit:
+						_writer.WriteLimitExpressionParameter(limit, this);
+						break;
 				}
 				return base.VisitQueryParameter(queryParameterQueryExpression);
 			}

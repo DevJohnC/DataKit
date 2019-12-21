@@ -97,6 +97,68 @@ namespace DataKit.SQL.UnitTests
 			Assert.AreEqual($"SELECT * FROM [TestTable] WHERE [Column] = @{firstParameter.Key}", sql);
 		}
 
+		[TestMethod]
+		public void Can_Write_OrderBy_Query()
+		{
+			var queryExpression = QueryExpression.SelectStatement(
+				new[] { QueryExpression.All() },
+				from: QueryExpression.Table("TestTable"),
+				orderBy: new[]
+				{
+					QueryExpression.OrderBy(QueryExpression.Column("Column1")),
+					QueryExpression.OrderByDescending(QueryExpression.Column("Column2"))
+				});
+			var sql = ConvertToSql(queryExpression);
+			Assert.AreEqual("SELECT * FROM [TestTable] ORDER BY [Column1], [Column2] DESC", sql);
+		}
+
+		[TestMethod]
+		public void Can_Write_GroupBy_Query()
+		{
+			var queryExpression = QueryExpression.SelectStatement(
+				new[] { QueryExpression.All() },
+				from: QueryExpression.Table("TestTable"),
+				groupBy: new[]
+				{
+					QueryExpression.GroupBy(QueryExpression.Column("Column1")),
+					QueryExpression.GroupBy(QueryExpression.Column("Column2"))
+				});
+			var sql = ConvertToSql(queryExpression);
+			Assert.AreEqual("SELECT * FROM [TestTable] GROUP BY [Column1], [Column2]", sql);
+		}
+
+		[TestMethod]
+		public void Can_Write_Limit_Query()
+		{
+			var queryExpression = QueryExpression.SelectStatement(
+				new[] { QueryExpression.All() },
+				from: QueryExpression.Table("TestTable"),
+				limit: QueryExpression.Limit(QueryExpression.Value(1))
+				);
+			var sql = ConvertToSql(queryExpression, out var parameters);
+			var limitParameter = parameters.First();
+
+			Assert.AreEqual(1, limitParameter.Value);
+			Assert.AreEqual($"SELECT * FROM [TestTable] LIMIT @{limitParameter.Key}", sql);
+		}
+
+		[TestMethod]
+		public void Can_Write_Limit_And_Offset_Query()
+		{
+			var queryExpression = QueryExpression.SelectStatement(
+				new[] { QueryExpression.All() },
+				from: QueryExpression.Table("TestTable"),
+				limit: QueryExpression.Limit(QueryExpression.Value(1), QueryExpression.Value(2))
+				);
+			var sql = ConvertToSql(queryExpression, out var parameters);
+			var limitParameter = parameters.First();
+			var offsetParameter = parameters.Skip(1).First();
+
+			Assert.AreEqual(1, limitParameter.Value);
+			Assert.AreEqual(2, offsetParameter.Value);
+			Assert.AreEqual($"SELECT * FROM [TestTable] LIMIT @{limitParameter.Key} OFFSET @{offsetParameter.Key}", sql);
+		}
+
 		private string ConvertToSql(QueryExpression queryExpression)
 		{
 			return ConvertToSql(queryExpression, out var _);

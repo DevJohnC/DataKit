@@ -9,14 +9,18 @@ namespace DataKit.SQL.QueryExpressions
 			QueryExpression[] projection,
 			QueryExpression from = null,
 			QueryExpression where = null,
-			QueryExpression having = null
+			QueryExpression having = null,
+			OrderByQueryExpression[] orderBy = null,
+			GroupByQueryExpression[] groupBy = null,
+			LimitQueryExpression limit = null
 			)
 		{
 			return new SelectStatementQueryExpression(
 				new ProjectionQueryExpression(projection),
 				from != null ? new FromQueryExpression(from) : null,
 				where != null ? new WhereQueryExpression(where) : null,
-				having != null ? new HavingQueryExpression(having) : null
+				having != null ? new HavingQueryExpression(having) : null,
+				orderBy, groupBy, limit
 				);
 		}
 
@@ -184,6 +188,31 @@ namespace DataKit.SQL.QueryExpressions
 		public static TableIdentifierQueryExpression Table(string tableName)
 		{
 			return new TableIdentifierQueryExpression(tableName);
+		}
+
+		public static OrderByQueryExpression OrderBy(QueryExpression expression)
+		{
+			return new OrderByQueryExpression(expression, OrderByDirection.Ascending);
+		}
+
+		public static OrderByQueryExpression OrderByDescending(QueryExpression expression)
+		{
+			return new OrderByQueryExpression(expression, OrderByDirection.Descending);
+		}
+
+		public static GroupByQueryExpression GroupBy(QueryExpression expression)
+		{
+			return new GroupByQueryExpression(expression);
+		}
+
+		public static LimitQueryExpression Limit(QueryExpression limit)
+		{
+			return new LimitQueryExpression(limit);
+		}
+
+		public static LimitQueryExpression Limit(QueryExpression limit, QueryExpression offset)
+		{
+			return new LimitQueryExpression(limit, offset);
 		}
 
 		public static CountFunctionCallQueryExpression CountFunction(

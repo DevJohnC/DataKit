@@ -74,15 +74,13 @@ namespace DataKit.SQL.Providers
 
 			WriteIfNotNull(selectStatementQueryExpression.Where, queryExpressionVisitor);
 
-			//  group by
+			WriteIfNotNull(selectStatementQueryExpression.GroupBy, queryExpressionVisitor);
 
 			WriteIfNotNull(selectStatementQueryExpression.Having, queryExpressionVisitor);
 
-			//  order by
+			WriteIfNotNull(selectStatementQueryExpression.OrderBy, queryExpressionVisitor);
 
-			//  limit
-
-			//  offset
+			WriteIfNotNull(selectStatementQueryExpression.Limit, queryExpressionVisitor);
 		}
 
 		public virtual void WriteProjection(
@@ -97,7 +95,7 @@ namespace DataKit.SQL.Providers
 			QueryExpressionVisitor queryExpressionVisitor)
 		{
 			queryText.Append(" FROM ");
-			queryExpressionVisitor.Visit(fromQueryExpression.From);
+			queryExpressionVisitor.Visit(fromQueryExpression.Expression);
 		}
 
 		public virtual void WriteWhereQueryParameters(
@@ -105,7 +103,7 @@ namespace DataKit.SQL.Providers
 			QueryExpressionVisitor queryExpressionVisitor)
 		{
 			queryText.Append(" WHERE ");
-			queryExpressionVisitor.Visit(whereQueryExpression.Where);
+			queryExpressionVisitor.Visit(whereQueryExpression.Expression);
 		}
 
 		public virtual void WriteHavingQueryParameters(
@@ -113,7 +111,58 @@ namespace DataKit.SQL.Providers
 			QueryExpressionVisitor queryExpressionVisitor)
 		{
 			queryText.Append(" HAVING ");
-			queryExpressionVisitor.Visit(whereQueryExpression.Having);
+			queryExpressionVisitor.Visit(whereQueryExpression.Expression);
+		}
+
+		public virtual void WriteOrderByQueryParameter(
+			OrderByCollectionQueryExpression orderByCollectionQuery,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryText.Append(" ORDER BY ");
+			WriteExpressionCollection(orderByCollectionQuery.Expressions, queryExpressionVisitor);
+		}
+
+		public virtual void WriteOrderByExpressionQueryParameter(
+			OrderByQueryExpression orderByQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			WriteIfNotNull(orderByQueryExpression.Expression, queryExpressionVisitor);
+			if (orderByQueryExpression.Direction == OrderByDirection.Descending)
+				queryText.Append(" DESC ");
+		}
+
+		public virtual void WriteGroupByQueryParameter(
+			GroupByCollectionQueryExpression groupByCollectionQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryText.Append(" GROUP BY ");
+			WriteExpressionCollection(groupByCollectionQueryExpression.Expressions, queryExpressionVisitor);
+		}
+
+		public virtual void WriteGroupByExpressionQueryParameter(
+			GroupByQueryExpression groupByQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			WriteIfNotNull(groupByQueryExpression.Expression, queryExpressionVisitor);
+		}
+
+		public virtual void WriteLimitExpressionParameter(
+			LimitQueryExpression limitQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryText.Append(" LIMIT ");
+			WriteIfNotNull(limitQueryExpression.Limit, queryExpressionVisitor);
+
+			if (limitQueryExpression.Offset != null)
+			{
+				queryText.Append(" OFFSET ");
+				WriteIfNotNull(limitQueryExpression.Offset, queryExpressionVisitor);
+			}
 		}
 
 		public virtual void WriteAsOperator(
