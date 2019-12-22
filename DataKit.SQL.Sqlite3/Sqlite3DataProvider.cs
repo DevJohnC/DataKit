@@ -10,6 +10,8 @@ namespace DataKit.SQL.Sqlite3
 {
 	public class Sqlite3DataProvider : DataProviderBase, IDisposable
 	{
+		public const string PROVIDER_NAME = "SQLite3";
+
 		public static Sqlite3DataProvider InMemory(bool convertGuidsToText = false)
 		{
 			return new Sqlite3DataProvider(
@@ -30,6 +32,8 @@ namespace DataKit.SQL.Sqlite3
 		private readonly bool _convertGuidsToText;
 		private readonly string _connectionString;
 		private readonly DbConnection _connectionOverride;
+
+		public override string ProviderName => PROVIDER_NAME;
 
 		public Sqlite3DataProvider(
 			SqliteConnectionStringBuilder connectionStringBuilder, bool convertGuidsToText)

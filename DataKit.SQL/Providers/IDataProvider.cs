@@ -6,6 +6,8 @@ namespace DataKit.SQL.Providers
 {
 	public interface IDataProvider : IQueryProvider
 	{
+		string ProviderName { get; }
+
 		ITransaction CreateTransaction();
 		ITransaction CreateTransaction(IsolationLevel isolationLevel);
 		Task<ITransaction> CreateTransactionAsync(CancellationToken cancellationToken = default);

@@ -6,6 +6,8 @@ namespace DataKit.SQL.Providers
 {
 	public abstract class DataProviderBase : QueryProviderBase, IDataProvider
 	{
+		public abstract string ProviderName { get; }
+
 		public ITransaction CreateTransaction()
 		{
 			var connectionLease = OpenConnection();
