@@ -1,6 +1,6 @@
 ﻿using DataKit.Modelling;
 using DataKit.Modelling.TypeModels;
-using Silk.Data.SQL;
+using DataKit.ORM.Sql;
 using System;
 
 namespace DataKit.ORM.Schema.Sql

@@ -1,4 +1,4 @@
-﻿using Silk.Data.SQL.Queries;
+﻿using DataKit.SQL.Providers;
 
 namespace DataKit.ORM.Sql.Mapping
 {

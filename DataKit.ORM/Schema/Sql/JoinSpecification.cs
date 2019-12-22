@@ -1,6 +1,6 @@
 ﻿using DataKit.ORM.Sql.Expressions;
 using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

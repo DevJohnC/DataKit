@@ -1,11 +1,11 @@
-﻿using Silk.Data.SQL.Expressions;
+﻿using DataKit.SQL.QueryExpressions;
 using System;
 
 namespace DataKit.ORM.Sql.Expressions
 {
 	public static class ORMQueryExpressions
 	{
-		public static ValueExpression Value(object value)
+		public static ValueParameterQueryExpression Value(object value)
 		{
 			if (value is Enum)
 				value = (int)value;

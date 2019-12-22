@@ -1,5 +1,5 @@
 ﻿using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -100,12 +100,12 @@ namespace DataKit.ORM.Sql.Expressions.MethodConversion
 		{
 			if (methodCallExpression.Arguments.Count < 2)
 				return new LinqQueryExpression<TEntity>(
-					QueryExpression.CountFunction()
+					QueryExpression.Count()
 				);
 
 			var expression = expressionConverter.Visit(methodCallExpression.Arguments[1]) as LinqQueryExpression<TEntity>;
 			return new LinqQueryExpression<TEntity>(
-				QueryExpression.CountFunction(expression.QueryExpression),
+				QueryExpression.Count(expression.QueryExpression),
 				expression.JoinBuilders
 				);
 		}
@@ -117,9 +117,8 @@ namespace DataKit.ORM.Sql.Expressions.MethodConversion
 			var expression = expressionConverter.Visit(methodCallExpression.Arguments[1]) as LinqQueryExpression<TEntity>;
 			var value = expressionConverter.Visit(methodCallExpression.Arguments[2]) as LinqQueryExpression<TEntity>;
 			return new LinqQueryExpression<TEntity>(
-				QueryExpression.Compare(
+				QueryExpression.Like(
 					expression.QueryExpression,
-					ComparisonOperator.Like,
 					value.QueryExpression
 					),
 				expression.JoinBuilders
@@ -133,7 +132,7 @@ namespace DataKit.ORM.Sql.Expressions.MethodConversion
 			var expression = expressionConverter.Visit(methodCallExpression.Arguments[1]) as LinqQueryExpression<TEntity>;
 			var value = expressionConverter.Visit(methodCallExpression.Arguments[2]) as LinqQueryExpression<TEntity>;
 
-			if (value.QueryExpression is ValueExpression valueQueryExpression &&
+			if (value.QueryExpression is ValueParameterQueryExpression valueQueryExpression &&
 				valueQueryExpression.Value is IEnumerable valueEnumerable)
 			{
 				var valueExpressions = new List<QueryExpression>();
@@ -143,19 +142,17 @@ namespace DataKit.ORM.Sql.Expressions.MethodConversion
 				}
 
 				return new LinqQueryExpression<TEntity>(
-					QueryExpression.Compare(
+					QueryExpression.IsIn(
 						expression.QueryExpression,
-						ComparisonOperator.None,
-						QueryExpression.InFunction(valueExpressions.ToArray())
+						valueExpressions.ToArray()
 						),
 						expression.JoinBuilders);
 			}
 
 			return new LinqQueryExpression<TEntity>(
-				QueryExpression.Compare(
+				QueryExpression.IsIn(
 					expression.QueryExpression,
-					ComparisonOperator.None,
-					QueryExpression.InFunction(value.QueryExpression)
+					value.QueryExpression
 					),
 					expression.JoinBuilders);
 		}
@@ -168,9 +165,8 @@ namespace DataKit.ORM.Sql.Expressions.MethodConversion
 			var value = expressionConverter.Visit(methodCallExpression.Arguments[2]) as LinqQueryExpression<TEntity>;
 
 			return new LinqQueryExpression<TEntity>(
-				QueryExpression.Compare(
-					new BitwiseOperationQueryExpression(expression.QueryExpression, BitwiseOperator.And, value.QueryExpression),
-					ComparisonOperator.AreEqual,
+				QueryExpression.AreEqual(
+					QueryExpression.And(expression.QueryExpression, value.QueryExpression),
 					value.QueryExpression
 					),
 					(expression.JoinBuilders ?? JoinBuilder<TEntity>.Empty).Concat(
@@ -190,7 +186,7 @@ namespace DataKit.ORM.Sql.Expressions.MethodConversion
 			where TEntity : class
 		{
 			return new LinqQueryExpression<TEntity>(
-				QueryExpression.LastInsertIdFunction()
+				QueryExpression.LastInsertedId()
 				);
 		}
 

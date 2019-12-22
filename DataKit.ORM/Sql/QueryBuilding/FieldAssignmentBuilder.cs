@@ -4,7 +4,7 @@ using DataKit.Modelling;
 using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +19,8 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		where TEntity : class
 	{
 		private readonly SqlDataModel<TEntity> _dataModel;
-		private readonly List<(ColumnExpression Column, QueryExpression ValueExpression)> _fieldAssignments
-			= new List<(ColumnExpression Column, QueryExpression ValueExpression)>();
+		private readonly List<(ColumnIdentifierQueryExpression Column, QueryExpression ValueExpression)> _fieldAssignments
+			= new List<(ColumnIdentifierQueryExpression Column, QueryExpression ValueExpression)>();
 
 		public FieldAssignmentBuilder(SqlDataModel<TEntity> dataModel)
 		{
@@ -52,9 +52,9 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			return true;
 		}
 
-		protected void AddFieldAssignment(ColumnExpression columnExpression, QueryExpression valueExpression)
+		protected void AddFieldAssignment(ColumnIdentifierQueryExpression columnExpression, QueryExpression valueExpression)
 		{
-			_fieldAssignments.RemoveAll(q => q.Column.ColumnName == columnExpression.ColumnName);
+			_fieldAssignments.RemoveAll(q => q.Column.ColumnName == columnExpression.IdentifierName);
 			_fieldAssignments.Add((columnExpression, valueExpression));
 		}
 

@@ -2,8 +2,8 @@
 using System.Linq.Expressions;
 using DataKit.ORM.Sql.Expressions;
 using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
-using Silk.Data.SQL.Providers;
+using DataKit.SQL.Providers;
+using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.ORM.Sql
 {
@@ -82,7 +82,7 @@ namespace DataKit.ORM.Sql
 		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
 			=> OrWhere(field, comparisonType, value);
 
-		protected override QueryExpression BuildQuery()
+		protected override ExecutableQueryExpression BuildQuery()
 			=> _queryBuilder.BuildQuery();
 	}
 }

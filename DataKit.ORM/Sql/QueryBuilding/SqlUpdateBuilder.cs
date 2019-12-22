@@ -2,7 +2,7 @@
 using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Linq.Expressions;
 
@@ -39,7 +39,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		IQueryBuilder<TEntity> IQueryBuilder<TEntity>.Table(string tableName)
 			=> Table(tableName);
 
-		public override QueryExpression BuildQuery()
+		public override ExecutableQueryExpression BuildQuery()
 		{
 			var where = _whereBuilder.Build();
 			var row = _assignments.Build();

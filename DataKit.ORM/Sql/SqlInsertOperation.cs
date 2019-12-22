@@ -1,8 +1,8 @@
 ﻿using DataKit.Mapping.Binding;
 using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
-using Silk.Data.SQL.Providers;
+using DataKit.SQL.Providers;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Linq.Expressions;
 
@@ -71,7 +71,7 @@ namespace DataKit.ORM.Sql
 		IAssignmentQueryBuilder<TEntity> IAssignmentQueryBuilder<TEntity>.Set<TProperty>(Expression<Func<TEntity, TProperty>> fieldSelector, Expression<Func<TEntity, TProperty>> valueExpression)
 			=> Set(fieldSelector, valueExpression);
 
-		protected override QueryExpression BuildQuery()
+		protected override ExecutableQueryExpression BuildQuery()
 			=> _queryBuilder.BuildQuery();
 	}
 }

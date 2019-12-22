@@ -8,8 +8,7 @@ using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql;
 using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
-using IQueryProvider = Silk.Data.SQL.Providers.IQueryProvider;
+using IQueryProvider = DataKit.SQL.Providers.IQueryProvider;
 
 namespace DataKit.ORM
 {

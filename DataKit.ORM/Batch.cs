@@ -1,11 +1,9 @@
 ﻿using DataKit.ORM.Sql;
-using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
-using Silk.Data.SQL.Providers;
+using DataKit.SQL.QueryExpressions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IQueryProvider = Silk.Data.SQL.Providers.IQueryProvider;
+using IQueryProvider = DataKit.SQL.Providers.IQueryProvider;
 
 namespace DataKit.ORM
 {
@@ -137,8 +135,8 @@ namespace DataKit.ORM
 				_queries.Add(new Query(batchableOperation.BuildQuery(), resultProcessor));
 			}
 
-			private QueryExpression BuildQuery()
-				=> new CompositeQueryExpression(_queries.Select(q => q.QueryExpression));
+			private ExecutableQueryExpression BuildQuery()
+				=> QueryExpression.Many(_queries.Select(q => q.QueryExpression));
 
 			public override void Execute()
 			{
@@ -166,13 +164,13 @@ namespace DataKit.ORM
 
 			private class Query
 			{
-				public Query(QueryExpression queryExpression, ISqlBatchProcessor processor)
+				public Query(ExecutableQueryExpression queryExpression, ISqlBatchProcessor processor)
 				{
 					QueryExpression = queryExpression;
 					Processor = processor;
 				}
 
-				public QueryExpression QueryExpression { get; }
+				public ExecutableQueryExpression QueryExpression { get; }
 				public ISqlBatchProcessor Processor { get; }
 			}
 		}

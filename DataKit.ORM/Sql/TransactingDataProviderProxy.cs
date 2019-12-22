@@ -1,6 +1,7 @@
-﻿using Silk.Data.SQL.Expressions;
-using Silk.Data.SQL.Providers;
-using Silk.Data.SQL.Queries;
+﻿using DataKit.SQL.Providers;
+using DataKit.SQL.QueryExpressions;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DataKit.ORM.Sql
@@ -20,8 +21,10 @@ namespace DataKit.ORM.Sql
 
 		public void Dispose()
 		{
-			_activeQueryProvider.Dispose();
-			_provider.Dispose();
+			if (_activeQueryProvider is IDisposable disposableActive)
+				disposableActive.Dispose();
+			if (_provider is IDisposable disposableProvider)
+				disposableProvider.Dispose();
 		}
 
 		public ITransaction CreateTransaction()
@@ -43,24 +46,22 @@ namespace DataKit.ORM.Sql
 			_activeQueryProvider = _provider;
 		}
 
-		public int ExecuteNonQuery(QueryExpression queryExpression)
-			=> _activeQueryProvider.ExecuteNonQuery(queryExpression);
+		public int ExecuteNonQuery(ExecutableQueryExpression query, ParameterBag parameters = null)
+			=> _activeQueryProvider.ExecuteNonQuery(query, parameters);
 
-		public Task<int> ExecuteNonQueryAsync(QueryExpression queryExpression)
-			=> _activeQueryProvider.ExecuteNonQueryAsync(queryExpression);
+		public Task<int> ExecuteNonQueryAsync(ExecutableQueryExpression query, ParameterBag parameters = null, CancellationToken cancellationToken = default)
+			=> _activeQueryProvider.ExecuteNonQueryAsync(query, parameters);
 
-		public QueryResult ExecuteReader(QueryExpression queryExpression)
-			=> _activeQueryProvider.ExecuteReader(queryExpression);
+		public QueryResult ExecuteReader(ExecutableQueryExpression query, ParameterBag parameters = null)
+			=> _activeQueryProvider.ExecuteReader(query, parameters);
 
-		public Task<QueryResult> ExecuteReaderAsync(QueryExpression queryExpression)
-			=> _activeQueryProvider.ExecuteReaderAsync(queryExpression);
+		public Task<QueryResult> ExecuteReaderAsync(ExecutableQueryExpression query, ParameterBag parameters = null, CancellationToken cancellationToken = default)
+			=> _activeQueryProvider.ExecuteReaderAsync(query, parameters);
 
 		private class Transaction : ITransaction
 		{
 			private readonly ITransaction _transaction;
 			private readonly TransactingDataProviderProxy _dataProviderProxy;
-
-			public string ProviderName => _transaction.ProviderName;
 
 			public Transaction(ITransaction transaction, TransactingDataProviderProxy dataProviderProxy)
 			{
@@ -77,17 +78,17 @@ namespace DataKit.ORM.Sql
 				_dataProviderProxy.SwitchOffTransaction();
 			}
 
-			public int ExecuteNonQuery(QueryExpression queryExpression)
-				=> _transaction.ExecuteNonQuery(queryExpression);
+			public int ExecuteNonQuery(ExecutableQueryExpression query, ParameterBag parameters = null)
+				=> _transaction.ExecuteNonQuery(query, parameters);
 
-			public Task<int> ExecuteNonQueryAsync(QueryExpression queryExpression)
-				=> _transaction.ExecuteNonQueryAsync(queryExpression);
+			public Task<int> ExecuteNonQueryAsync(ExecutableQueryExpression query, ParameterBag parameters = null, CancellationToken cancellationToken = default)
+				=> _transaction.ExecuteNonQueryAsync(query, parameters);
 
-			public QueryResult ExecuteReader(QueryExpression queryExpression)
-				=> _transaction.ExecuteReader(queryExpression);
+			public QueryResult ExecuteReader(ExecutableQueryExpression query, ParameterBag parameters = null)
+				=> _transaction.ExecuteReader(query, parameters);
 
-			public Task<QueryResult> ExecuteReaderAsync(QueryExpression queryExpression)
-				=> _transaction.ExecuteReaderAsync(queryExpression);
+			public Task<QueryResult> ExecuteReaderAsync(ExecutableQueryExpression query, ParameterBag parameters = null, CancellationToken cancellationToken = default)
+				=> _transaction.ExecuteReaderAsync(query, parameters);
 
 			public void Rollback()
 				=> _transaction.Rollback();

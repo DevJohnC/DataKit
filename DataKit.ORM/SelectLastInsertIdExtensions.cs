@@ -1,7 +1,7 @@
 ﻿using DataKit.ORM.Sql;
 using DataKit.ORM.Sql.Expressions;
 using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System.Linq;
 
 namespace DataKit.ORM
@@ -19,10 +19,9 @@ namespace DataKit.ORM
 			if (primaryKeyField == null)
 				throw new System.InvalidOperationException("To query last inserted ID a server generated primary key is required.");
 
-			var expression = QueryExpression.Compare(
+			var expression = QueryExpression.AreEqual(
 				QueryExpression.Column(primaryKeyField.ColumnName),
-				ComparisonOperator.AreEqual,
-				QueryExpression.LastInsertIdFunction()
+				QueryExpression.LastInsertedId()
 				);
 			whereBuilder.AndWhere(new SqlValueExpression<TEntity, bool>(expression, JoinBuilder<TEntity>.Empty));
 

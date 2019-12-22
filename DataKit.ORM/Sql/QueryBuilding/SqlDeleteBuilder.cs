@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.ORM.Sql.QueryBuilding
 {
@@ -32,7 +32,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		IQueryBuilder<TEntity> IQueryBuilder<TEntity>.Table(string tableName)
 			=> Table(tableName);
 
-		public override QueryExpression BuildQuery()
+		public override ExecutableQueryExpression BuildQuery()
 		{
 			var where = _whereBuilder.Build();
 

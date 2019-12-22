@@ -1,7 +1,7 @@
 ﻿using DataKit.ORM.Schema;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

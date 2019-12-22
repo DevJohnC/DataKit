@@ -1,11 +1,10 @@
 ﻿using DataKit.ORM.Schema;
-using Silk.Data.SQL.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using IQueryProvider = Silk.Data.SQL.Providers.IQueryProvider;
+using IQueryProvider = DataKit.SQL.Providers.IQueryProvider;
 
 namespace DataKit.ORM
 {

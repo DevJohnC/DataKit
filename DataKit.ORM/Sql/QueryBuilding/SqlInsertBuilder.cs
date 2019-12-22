@@ -2,7 +2,7 @@
 using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -91,7 +91,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			)
 			=> Set(entityView, entityBinding);
 
-		public override QueryExpression BuildQuery()
+		public override ExecutableQueryExpression BuildQuery()
 		{
 			var row = _assignments.Build();
 			var columnNames = row?.Select(q => q.Column.ColumnName).ToArray() ?? new string[0];

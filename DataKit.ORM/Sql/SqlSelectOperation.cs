@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using DataKit.Mapping;
@@ -11,9 +10,9 @@ using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Sql.Expressions;
 using DataKit.ORM.Sql.Mapping;
 using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
-using Silk.Data.SQL.Queries;
-using IQueryProvider = Silk.Data.SQL.Providers.IQueryProvider;
+using DataKit.SQL.Providers;
+using DataKit.SQL.QueryExpressions;
+using IQueryProvider = DataKit.SQL.Providers.IQueryProvider;
 
 namespace DataKit.ORM.Sql
 {
@@ -44,7 +43,7 @@ namespace DataKit.ORM.Sql
 			_self = (TSelf)this;
 		}
 
-		protected override QueryExpression BuildQuery()
+		protected override ExecutableQueryExpression BuildQuery()
 			=> QueryBuilder.BuildQuery();
 
 		ConditionBuilder<TEntity> IWhereQueryBuilder<TEntity>.WhereCondition => ((IWhereQueryBuilder<TEntity>)QueryBuilder).WhereCondition;
@@ -541,7 +540,7 @@ namespace DataKit.ORM.Sql
 			return new InjectDeferredProcessor(InjectSingle, instance);
 		}
 
-		QueryExpression IProjectionQuery.BuildQuery()
+		ExecutableQueryExpression IProjectionQuery.BuildQuery()
 			=> BuildQuery();
 
 		private class InjectDeferredProcessor : ISqlBatchProcessor
