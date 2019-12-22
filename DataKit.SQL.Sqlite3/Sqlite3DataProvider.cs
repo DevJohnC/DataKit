@@ -57,9 +57,22 @@ namespace DataKit.SQL.Sqlite3
 		protected override Task<IConnectionLease> OpenConnectionAsync(CancellationToken cancellationToken)
 			=> Task.FromResult(OpenConnection());
 
+		protected override DbCommand CreateCommand(DbConnection dbConnection, string sql, ParameterBag parameters)
+		{
+			if (_convertGuidsToText && parameters != null)
+			{
+				foreach (var kvp in parameters)
+				{
+					if (kvp.Value is Guid)
+						parameters[kvp.Key] = kvp.Value.ToString();
+				}
+			}
+			return base.CreateCommand(dbConnection, sql, parameters);
+		}
+
 		protected override QueryWriter CreateQueryWriter()
 		{
-			return new Sqlite3QueryWriter(_convertGuidsToText);
+			return new Sqlite3QueryWriter();
 		}
 
 		public void Dispose()
