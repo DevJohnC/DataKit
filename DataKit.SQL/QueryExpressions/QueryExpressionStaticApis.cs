@@ -282,11 +282,54 @@ namespace DataKit.SQL.QueryExpressions
 			return new LimitQueryExpression(limit, offset);
 		}
 
-		public static CountFunctionCallQueryExpression CountFunction(
+		public static CountFunctionCallQueryExpression Count(
 			QueryExpression expression = null
 			)
 		{
 			return new CountFunctionCallQueryExpression(expression);
+		}
+
+		public static RandomFunctionCallQueryExpression Random()
+		{
+			return new RandomFunctionCallQueryExpression();
+		}
+
+		public static MinFunctionCallQueryExpression Min(
+			QueryExpression expression = null
+			)
+		{
+			return new MinFunctionCallQueryExpression(expression);
+		}
+
+		public static MaxFunctionCallQueryExpression Max(
+			QueryExpression expression = null
+			)
+		{
+			return new MaxFunctionCallQueryExpression(expression);
+		}
+
+		public static ConcatFunctionCallQueryExpression Concat(params QueryExpression[] queryExpressions)
+		{
+			return new ConcatFunctionCallQueryExpression(queryExpressions);
+		}
+
+		public static ConcatFunctionCallQueryExpression Concat(IEnumerable<QueryExpression> queryExpressions)
+		{
+			return Concat(queryExpressions.ToArray());
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <remarks>
+		/// Due to how the data provider executes queries this function should be called in a transaction
+		/// or as a bulk statement with Many. The underlying connection acquired from the connection pool
+		/// isn't garuanteed to be the same between queries otherwise.
+		/// </remarks>
+		/// <returns></returns>
+		public static LastInsertedIdFunctionCallExpression LastInsertedId()
+		{
+			return new LastInsertedIdFunctionCallExpression();
 		}
 	}
 }

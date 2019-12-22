@@ -20,6 +20,16 @@ namespace DataKit.SQL.Sqlite3
 			base.WriteExtension(queryExpression, queryExpressionVisitor);
 		}
 
+		public override void WriteConcatFunction(ConcatFunctionCallQueryExpression concatFunctionCallQueryExpression, QueryExpressionVisitor queryExpressionVisitor)
+		{
+			WriteExpressionCollection(concatFunctionCallQueryExpression.Expressions, queryExpressionVisitor, seperator: " || ");
+		}
+
+		public override void WriteLastInsertedIdFunction(LastInsertedIdFunctionCallExpression lastInsertedIdFunctionCallExpression, QueryExpressionVisitor queryExpressionVisitor)
+		{
+			queryText.Append(" last_insert_rowid() ");
+		}
+
 		public void Append(string str)
 			=> queryText.Append(str);
 	}

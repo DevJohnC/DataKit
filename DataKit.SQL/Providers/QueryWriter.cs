@@ -1,4 +1,5 @@
 ﻿using DataKit.SQL.QueryExpressions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -452,6 +453,54 @@ namespace DataKit.SQL.Providers
 			queryText.Append(" COUNT(");
 			WriteIfNotNull(countFunctionCallQueryExpression.Expression, queryExpressionVisitor);
 			queryText.Append(") ");
+		}
+
+		public virtual void WriteRandomFunction(
+			RandomFunctionCallQueryExpression randomFunctionCallQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor)
+		{
+			queryText.Append(" RANDOM() ");
+		}
+
+		public virtual void WriteMinFunction(
+			MinFunctionCallQueryExpression minFunctionCallQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor)
+		{
+			queryText.Append(" MIN(");
+			WriteIfNotNull(minFunctionCallQueryExpression.Expression, queryExpressionVisitor);
+			queryText.Append(") ");
+		}
+
+		public virtual void WriteMaxFunction(
+			MaxFunctionCallQueryExpression maxFunctionCallQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor)
+		{
+			queryText.Append(" MAX(");
+			WriteIfNotNull(maxFunctionCallQueryExpression.Expression, queryExpressionVisitor);
+			queryText.Append(") ");
+		}
+
+		public virtual void WriteConcatFunction(
+			ConcatFunctionCallQueryExpression concatFunctionCallQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryText.Append(" CONCAT(");
+			WriteExpressionCollection(concatFunctionCallQueryExpression.Expressions, queryExpressionVisitor);
+			queryText.Append(") ");
+		}
+
+		public virtual void WriteLastInsertedIdFunction(
+			LastInsertedIdFunctionCallExpression lastInsertedIdFunctionCallExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			//  todo: decide what to do about this
+			//  last insert id is literally different on every single platform
+			//  the obvious thing to do would be to make QueryWriter abstract
+			//  but that means writing an implementation of a writer for testing
+			//  purposes and use in other contexts I can't think of now
+			throw new NotImplementedException();
 		}
 	}
 }

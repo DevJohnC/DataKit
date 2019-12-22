@@ -13,10 +13,10 @@ namespace DataKit.SQL.UnitTests
 			var queryExpression = 
 				QueryExpression.Many(
 				QueryExpression.Select(
-					new[] { QueryExpression.CountFunction() }
+					new[] { QueryExpression.Count() }
 				),
 				QueryExpression.Select(
-					new[] { QueryExpression.CountFunction() }
+					new[] { QueryExpression.Count() }
 				));
 			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT COUNT(); SELECT COUNT();", sql);
@@ -26,7 +26,7 @@ namespace DataKit.SQL.UnitTests
 		public void Can_Write_Select_With_Projection_Only()
 		{
 			var queryExpression = QueryExpression.Select(
-				new[] { QueryExpression.CountFunction() }
+				new[] { QueryExpression.Count() }
 				);
 			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT COUNT();", sql);
@@ -36,7 +36,7 @@ namespace DataKit.SQL.UnitTests
 		public void Can_Write_Select_With_Distinct_Count()
 		{
 			var queryExpression = QueryExpression.Select(
-				new[] { QueryExpression.CountFunction(
+				new[] { QueryExpression.Count(
 					QueryExpression.Distinct(QueryExpression.Column("Id"))
 					) }
 				);

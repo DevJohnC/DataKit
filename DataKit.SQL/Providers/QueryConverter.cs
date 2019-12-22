@@ -99,6 +99,21 @@ namespace DataKit.SQL.Providers
 					case CountFunctionCallQueryExpression count:
 						_writer.WriteCountFunction(count, this);
 						break;
+					case RandomFunctionCallQueryExpression random:
+						_writer.WriteRandomFunction(random, this);
+						break;
+					case MinFunctionCallQueryExpression min:
+						_writer.WriteMinFunction(min, this);
+						break;
+					case MaxFunctionCallQueryExpression max:
+						_writer.WriteMaxFunction(max, this);
+						break;
+					case ConcatFunctionCallQueryExpression concat:
+						_writer.WriteConcatFunction(concat, this);
+						break;
+					case LastInsertedIdFunctionCallExpression lastInsertedId:
+						_writer.WriteLastInsertedIdFunction(lastInsertedId, this);
+						break;
 				}
 				return base.VisitFunctionCall(functionCallQueryExpression);
 			}
