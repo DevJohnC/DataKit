@@ -85,5 +85,87 @@ namespace DataKit.SQL.Sqlite3.Tests
 				}
 			}
 		}
+
+		[TestMethod]
+		public void Can_Commit_In_Transaction()
+		{
+			using (var dataProvider = Sqlite3DataProvider.InMemory())
+			{
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw(
+					"CREATE TABLE TestTable (Value TEXT)"
+					));
+
+				using (var transaction = dataProvider.CreateTransaction())
+				{
+					transaction.ExecuteNonQuery(Sqlite3QueryExpression.Raw(
+						"INSERT INTO TestTable VALUES ('Hello World')"
+					));
+					transaction.Commit();
+				}
+
+				using (var queryResult = dataProvider.ExecuteReader(QueryExpression.Select(
+					projection: new[] { QueryExpression.All() },
+					from: QueryExpression.Table("TestTable")
+					)))
+				{
+					Assert.IsTrue(queryResult.HasRows);
+					Assert.IsTrue(queryResult.Read());
+					Assert.AreEqual("Hello World", queryResult.GetString(0));
+				}
+			}
+		}
+
+		[TestMethod]
+		public void Can_Rollback_In_Transaction()
+		{
+			using (var dataProvider = Sqlite3DataProvider.InMemory())
+			{
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw(
+					"CREATE TABLE TestTable (Value TEXT)"
+					));
+
+				using (var transaction = dataProvider.CreateTransaction())
+				{
+					transaction.ExecuteNonQuery(Sqlite3QueryExpression.Raw(
+						"INSERT INTO TestTable VALUES ('Hello World')"
+					));
+					transaction.Rollback();
+				}
+
+				using (var queryResult = dataProvider.ExecuteReader(QueryExpression.Select(
+					projection: new[] { QueryExpression.All() },
+					from: QueryExpression.Table("TestTable")
+					)))
+				{
+					Assert.IsFalse(queryResult.HasRows);
+				}
+			}
+		}
+
+		[TestMethod]
+		public void Can_Rollback_By_Disposing_Transaction()
+		{
+			using (var dataProvider = Sqlite3DataProvider.InMemory())
+			{
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw(
+					"CREATE TABLE TestTable (Value TEXT)"
+					));
+
+				using (var transaction = dataProvider.CreateTransaction())
+				{
+					transaction.ExecuteNonQuery(Sqlite3QueryExpression.Raw(
+						"INSERT INTO TestTable VALUES ('Hello World')"
+					));
+				}
+
+				using (var queryResult = dataProvider.ExecuteReader(QueryExpression.Select(
+					projection: new[] { QueryExpression.All() },
+					from: QueryExpression.Table("TestTable")
+					)))
+				{
+					Assert.IsFalse(queryResult.HasRows);
+				}
+			}
+		}
 	}
 }

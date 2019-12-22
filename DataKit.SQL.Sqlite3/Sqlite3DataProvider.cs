@@ -1,5 +1,4 @@
 ﻿using DataKit.SQL.Providers;
-using DataKit.SQL.QueryExpressions;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Data.Common;

@@ -6,7 +6,7 @@ using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.SQL.Providers
 {
-	public abstract class QueryProviderBase : IQueryProvider
+	public abstract class QueryProviderBase : IQueryProvider, IQueryProviderCommon
 	{
 		protected abstract QueryWriter CreateQueryWriter();
 
@@ -93,5 +93,11 @@ namespace DataKit.SQL.Providers
 				throw;
 			}
 		}
+
+		(string Sql, ParameterBag parameters) IQueryProviderCommon.ConvertQuery(QueryExpression queryExpression)
+			=> ConvertQuery(queryExpression);
+
+		DbCommand IQueryProviderCommon.CreateCommand(DbConnection dbConnection, string sql, ParameterBag parameters)
+			=> CreateCommand(dbConnection, sql, parameters);
 	}
 }
