@@ -12,12 +12,12 @@ namespace DataKit.SQL.QueryExpressions
 
 	public class MultipleStatementQueryExpression : StatementQueryExpression
 	{
-		public MultipleStatementQueryExpression(StatementQueryExpression[] statements)
+		public MultipleStatementQueryExpression(ExecutableQueryExpression[] statements)
 		{
-			Statements = statements ?? throw new ArgumentNullException(nameof(statements));
+			Queries = statements ?? throw new ArgumentNullException(nameof(statements));
 		}
 
-		public StatementQueryExpression[] Statements { get; }
+		public ExecutableQueryExpression[] Queries { get; }
 	}
 
 	public class SelectStatementQueryExpression : StatementQueryExpression

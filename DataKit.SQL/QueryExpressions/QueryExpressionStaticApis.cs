@@ -5,12 +5,12 @@ namespace DataKit.SQL.QueryExpressions
 {
 	public partial class QueryExpression
 	{
-		public static MultipleStatementQueryExpression Many(IEnumerable<StatementQueryExpression> statements)
+		public static MultipleStatementQueryExpression Many(IEnumerable<ExecutableQueryExpression> statements)
 		{
 			return Many(statements.ToArray());
 		}
 
-		public static MultipleStatementQueryExpression Many(params StatementQueryExpression[] statements)
+		public static MultipleStatementQueryExpression Many(params ExecutableQueryExpression[] statements)
 		{
 			return new MultipleStatementQueryExpression(statements);
 		}

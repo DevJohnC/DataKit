@@ -71,7 +71,7 @@ namespace DataKit.SQL.Providers
 			QueryExpressionVisitor queryExpressionVisitor
 			)
 		{
-			WriteExpressionCollection(multipleStatementQueryExpression.Statements, queryExpressionVisitor, seperator: " ");
+			WriteExpressionCollection(multipleStatementQueryExpression.Queries, queryExpressionVisitor, seperator: " ");
 		}
 
 		public virtual void WriteSelectStatement(
