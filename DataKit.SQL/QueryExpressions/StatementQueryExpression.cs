@@ -58,6 +58,23 @@ namespace DataKit.SQL.QueryExpressions
 		public QueryExpression[][] RowsExpressions { get; }
 	}
 
+	public class UpdateStatementQueryExpression : StatementQueryExpression
+	{
+		public UpdateStatementQueryExpression(QueryExpression into, ColumnIdentifierQueryExpression[] columns, QueryExpression[] valueExpressions,
+			WhereQueryExpression where = null)
+		{
+			Into = into ?? throw new ArgumentNullException(nameof(into));
+			Columns = columns ?? throw new ArgumentNullException(nameof(columns));
+			ValueExpressions = valueExpressions ?? throw new ArgumentNullException(nameof(valueExpressions));
+			Where = where;
+		}
+
+		public QueryExpression Into { get; }
+		public ColumnIdentifierQueryExpression[] Columns { get; }
+		public QueryExpression[] ValueExpressions { get; }
+		public WhereQueryExpression Where { get; }
+	}
+
 	public class DeleteStatementQueryExpression : StatementQueryExpression
 	{
 		public DeleteStatementQueryExpression(FromQueryExpression from, WhereQueryExpression where)

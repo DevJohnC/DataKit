@@ -107,6 +107,26 @@ namespace DataKit.SQL.Providers
 			}
 		}
 
+		public virtual void WriteUpdateStatement(
+			UpdateStatementQueryExpression updateStatementQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryText.Append("UPDATE ");
+			WriteIfNotNull(updateStatementQueryExpression.Into, queryExpressionVisitor);
+			queryText.Append(" SET ");
+			for (var i = 0; i < updateStatementQueryExpression.Columns.Length; i++)
+			{
+				WriteIfNotNull(updateStatementQueryExpression.Columns[i], queryExpressionVisitor);
+				queryText.Append(" = ");
+				WriteIfNotNull(updateStatementQueryExpression.ValueExpressions[i], queryExpressionVisitor);
+
+				if (i < updateStatementQueryExpression.Columns.Length - 1)
+					queryText.Append(", ");
+			}
+			WriteIfNotNull(updateStatementQueryExpression.Where, queryExpressionVisitor);
+		}
+
 		public virtual void WriteDeleteStatement(
 			DeleteStatementQueryExpression deleteStatementQueryExpression,
 			QueryExpressionVisitor queryExpressionVisitor

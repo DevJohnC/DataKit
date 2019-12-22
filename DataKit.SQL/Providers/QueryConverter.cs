@@ -29,6 +29,9 @@ namespace DataKit.SQL.Providers
 					case InsertStatementQueryExpression insert:
 						_writer.WriteInsertStatement(insert, this);
 						break;
+					case UpdateStatementQueryExpression update:
+						_writer.WriteUpdateStatement(update, this);
+						break;
 					case DeleteStatementQueryExpression delete:
 						_writer.WriteDeleteStatement(delete, this);
 						break;

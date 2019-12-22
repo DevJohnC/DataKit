@@ -39,6 +39,19 @@ namespace DataKit.SQL.QueryExpressions
 				);
 		}
 
+		public static UpdateStatementQueryExpression Update(
+			QueryExpression into,
+			ColumnIdentifierQueryExpression[] columns,
+			QueryExpression[] values,
+			QueryExpression where = null
+			)
+		{
+			return new UpdateStatementQueryExpression(
+				into, columns, values,
+				where != null ? new WhereQueryExpression(where) : null
+				);
+		}
+
 		public static DeleteStatementQueryExpression Delete(
 			QueryExpression from,
 			QueryExpression where = null
