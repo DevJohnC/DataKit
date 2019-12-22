@@ -14,7 +14,7 @@ namespace DataKit.SQL.UnitTests
 				new[] { QueryExpression.CountFunction() }
 				);
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT COUNT()", sql);
+			Assert.AreEqual("SELECT COUNT();", sql);
 		}
 
 		[TestMethod]
@@ -26,7 +26,7 @@ namespace DataKit.SQL.UnitTests
 					) }
 				);
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT COUNT(DISTINCT [Id])", sql);
+			Assert.AreEqual("SELECT COUNT(DISTINCT [Id]);", sql);
 		}
 
 		[TestMethod]
@@ -37,7 +37,7 @@ namespace DataKit.SQL.UnitTests
 				from: QueryExpression.Table("TestTable")
 				);
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT [Column1], [Column2] FROM [TestTable]", sql);
+			Assert.AreEqual("SELECT [Column1], [Column2] FROM [TestTable];", sql);
 		}
 
 		[TestMethod]
@@ -48,7 +48,7 @@ namespace DataKit.SQL.UnitTests
 				from: QueryExpression.Table("TestTable")
 				);
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT [TestColumn] AS [aliasTest] FROM [TestTable]", sql);
+			Assert.AreEqual("SELECT [TestColumn] AS [aliasTest] FROM [TestTable];", sql);
 		}
 
 		[TestMethod]
@@ -62,7 +62,7 @@ namespace DataKit.SQL.UnitTests
 				from: QueryExpression.Table("TestTable")
 				);
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT [Column] IN SELECT [Id] FROM [OtherTable] FROM [TestTable]", sql);
+			Assert.AreEqual("SELECT [Column] IN (SELECT [Id] FROM [OtherTable]) FROM [TestTable];", sql);
 		}
 
 		[TestMethod]
@@ -79,7 +79,7 @@ namespace DataKit.SQL.UnitTests
 					))
 				);
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT * FROM [TestTable] WHERE ([Left] = [Right] AND ([Left] = [Right] OR [Left] != [Right]))", sql);
+			Assert.AreEqual("SELECT * FROM [TestTable] WHERE ([Left] = [Right] AND ([Left] = [Right] OR [Left] != [Right]));", sql);
 		}
 
 		[TestMethod]
@@ -91,7 +91,7 @@ namespace DataKit.SQL.UnitTests
 				where: QueryExpression.AreEqual(QueryExpression.Column("Column"), QueryExpression.Parameter("myParameter"))
 				);
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT * FROM [TestTable] WHERE [Column] = @myParameter", sql);
+			Assert.AreEqual("SELECT * FROM [TestTable] WHERE [Column] = @myParameter;", sql);
 		}
 
 		[TestMethod]
@@ -105,7 +105,7 @@ namespace DataKit.SQL.UnitTests
 			var sql = TestHelpers.ConvertToSql(queryExpression, out var parameters);
 			var firstParameter = parameters.First();
 			Assert.AreEqual("myValue", firstParameter.Value);
-			Assert.AreEqual($"SELECT * FROM [TestTable] WHERE [Column] = @{firstParameter.Key}", sql);
+			Assert.AreEqual($"SELECT * FROM [TestTable] WHERE [Column] = @{firstParameter.Key};", sql);
 		}
 
 		[TestMethod]
@@ -120,7 +120,7 @@ namespace DataKit.SQL.UnitTests
 					QueryExpression.OrderByDescending(QueryExpression.Column("Column2"))
 				});
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT * FROM [TestTable] ORDER BY [Column1], [Column2] DESC", sql);
+			Assert.AreEqual("SELECT * FROM [TestTable] ORDER BY [Column1], [Column2] DESC;", sql);
 		}
 
 		[TestMethod]
@@ -135,7 +135,7 @@ namespace DataKit.SQL.UnitTests
 					QueryExpression.GroupBy(QueryExpression.Column("Column2"))
 				});
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT * FROM [TestTable] GROUP BY [Column1], [Column2]", sql);
+			Assert.AreEqual("SELECT * FROM [TestTable] GROUP BY [Column1], [Column2];", sql);
 		}
 
 		[TestMethod]
@@ -150,7 +150,7 @@ namespace DataKit.SQL.UnitTests
 			var limitParameter = parameters.First();
 
 			Assert.AreEqual(1, limitParameter.Value);
-			Assert.AreEqual($"SELECT * FROM [TestTable] LIMIT @{limitParameter.Key}", sql);
+			Assert.AreEqual($"SELECT * FROM [TestTable] LIMIT @{limitParameter.Key};", sql);
 		}
 
 		[TestMethod]
@@ -167,7 +167,7 @@ namespace DataKit.SQL.UnitTests
 
 			Assert.AreEqual(1, limitParameter.Value);
 			Assert.AreEqual(2, offsetParameter.Value);
-			Assert.AreEqual($"SELECT * FROM [TestTable] LIMIT @{limitParameter.Key} OFFSET @{offsetParameter.Key}", sql);
+			Assert.AreEqual($"SELECT * FROM [TestTable] LIMIT @{limitParameter.Key} OFFSET @{offsetParameter.Key};", sql);
 		}
 
 		[TestMethod]
@@ -183,7 +183,7 @@ namespace DataKit.SQL.UnitTests
 					QueryExpression.Join(rightTable, QueryExpression.Column("RightId", leftTable), QueryExpression.Column("Id", rightTable))
 				});
 			var sql = TestHelpers.ConvertToSql(queryExpression);
-			Assert.AreEqual("SELECT * FROM [LeftTable] INNER JOIN [RightTable] ON [LeftTable].[RightId] = [RightTable].[Id]", sql);
+			Assert.AreEqual("SELECT * FROM [LeftTable] INNER JOIN [RightTable] ON [LeftTable].[RightId] = [RightTable].[Id];", sql);
 		}
 	}
 }

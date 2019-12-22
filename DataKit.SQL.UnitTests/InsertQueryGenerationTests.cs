@@ -27,7 +27,7 @@ namespace DataKit.SQL.UnitTests
 			Assert.AreEqual(2, value2Parameter.Value);
 			Assert.AreEqual(3, value3Parameter.Value);
 			Assert.AreEqual(4, value4Parameter.Value);
-			Assert.AreEqual(sql, $"INSERT INTO [TestTable] ([Value1], [Value2]) VALUES (@{value1Parameter.Key}, @{value2Parameter.Key}), (@{value3Parameter.Key}, @{value4Parameter.Key})");
+			Assert.AreEqual(sql, $"INSERT INTO [TestTable] ([Value1], [Value2]) VALUES (@{value1Parameter.Key}, @{value2Parameter.Key}), (@{value3Parameter.Key}, @{value4Parameter.Key});");
 		}
 	}
 }

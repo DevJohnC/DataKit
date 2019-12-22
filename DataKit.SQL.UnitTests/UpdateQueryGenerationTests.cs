@@ -22,7 +22,7 @@ namespace DataKit.SQL.UnitTests
 
 			Assert.AreEqual(1, value1Parameter.Value);
 			Assert.AreEqual(2, value2Parameter.Value);
-			Assert.AreEqual(sql, $"UPDATE [TestTable] SET [Value1] = @{value1Parameter.Key}, [Value2] = @{value2Parameter.Key}");
+			Assert.AreEqual(sql, $"UPDATE [TestTable] SET [Value1] = @{value1Parameter.Key}, [Value2] = @{value2Parameter.Key};");
 		}
 
 		[TestMethod]
@@ -38,7 +38,7 @@ namespace DataKit.SQL.UnitTests
 			var value1Parameter = parameters.First();
 
 			Assert.AreEqual(1, value1Parameter.Value);
-			Assert.AreEqual(sql, $"UPDATE [TestTable] SET [Value1] = [Value2] + @{value1Parameter.Key}");
+			Assert.AreEqual(sql, $"UPDATE [TestTable] SET [Value1] = [Value2] + @{value1Parameter.Key};");
 		}
 
 		[TestMethod]
@@ -51,7 +51,7 @@ namespace DataKit.SQL.UnitTests
 				QueryExpression.AreEqual(QueryExpression.Column("Value2"), QueryExpression.Column("Value3"))
 				);
 			var sql = TestHelpers.ConvertToSql(query);
-			Assert.AreEqual(sql, $"UPDATE [TestTable] SET [Value1] = [Value2] WHERE [Value2] = [Value3]");
+			Assert.AreEqual(sql, $"UPDATE [TestTable] SET [Value1] = [Value2] WHERE [Value2] = [Value3];");
 		}
 	}
 }

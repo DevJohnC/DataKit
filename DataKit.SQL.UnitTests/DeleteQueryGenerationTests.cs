@@ -11,7 +11,7 @@ namespace DataKit.SQL.UnitTests
 		{
 			var query = QueryExpression.Delete(QueryExpression.Table("TestTable"));
 			var sql = TestHelpers.ConvertToSql(query);
-			Assert.AreEqual("DELETE FROM [TestTable]", sql);
+			Assert.AreEqual("DELETE FROM [TestTable];", sql);
 		}
 
 		[TestMethod]
@@ -22,7 +22,7 @@ namespace DataKit.SQL.UnitTests
 				QueryExpression.AreEqual(QueryExpression.Column("Id"), QueryExpression.Column("Id"))
 				);
 			var sql = TestHelpers.ConvertToSql(query);
-			Assert.AreEqual("DELETE FROM [TestTable] WHERE [Id] = [Id]", sql);
+			Assert.AreEqual("DELETE FROM [TestTable] WHERE [Id] = [Id];", sql);
 		}
 	}
 }

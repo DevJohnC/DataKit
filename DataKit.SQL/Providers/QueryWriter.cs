@@ -8,6 +8,8 @@ namespace DataKit.SQL.Providers
 	{
 		protected readonly StringBuilder queryText = new StringBuilder();
 
+		protected readonly Stack<ExecutableQueryExpression> statementStack = new Stack<ExecutableQueryExpression>();
+
 		public ParameterBag Parameters { get; } = new ParameterBag();
 
 		public override string ToString()
@@ -31,6 +33,11 @@ namespace DataKit.SQL.Providers
 				if (appendFinalSeparator || i < count - 1)
 					queryText.Append(seperator);
 			}
+		}
+
+		protected bool IsSubQuery()
+		{
+			return statementStack.Count > 1;
 		}
 
 		public virtual void WriteExtension(QueryExpression queryExpression,
@@ -62,6 +69,11 @@ namespace DataKit.SQL.Providers
 			SelectStatementQueryExpression selectStatementQueryExpression,
 			QueryExpressionVisitor queryExpressionVisitor)
 		{
+			statementStack.Push(selectStatementQueryExpression);
+
+			if (IsSubQuery())
+				queryText.Append(" ( ");
+
 			queryText.Append("SELECT ");
 			if (selectStatementQueryExpression.Projection == null || selectStatementQueryExpression.Projection.Expressions == null ||
 				selectStatementQueryExpression.Projection.Expressions.Length < 1)
@@ -82,6 +94,13 @@ namespace DataKit.SQL.Providers
 			WriteIfNotNull(selectStatementQueryExpression.OrderBy, queryExpressionVisitor);
 
 			WriteIfNotNull(selectStatementQueryExpression.Limit, queryExpressionVisitor);
+
+			if (IsSubQuery())
+				queryText.Append(" ) ");
+			else
+				queryText.Append("; ");
+
+			statementStack.Pop();
 		}
 
 		public virtual void WriteInsertStatement(
@@ -89,6 +108,11 @@ namespace DataKit.SQL.Providers
 			QueryExpressionVisitor queryExpressionVisitor
 			)
 		{
+			statementStack.Push(insertStatementQueryExpression);
+
+			if (IsSubQuery())
+				queryText.Append(" ( ");
+
 			queryText.Append("INSERT ");
 			WriteIfNotNull(insertStatementQueryExpression.Into, queryExpressionVisitor);
 
@@ -105,6 +129,13 @@ namespace DataKit.SQL.Providers
 				if (i < insertStatementQueryExpression.RowsExpressions.Length - 1)
 					queryText.Append(", ");
 			}
+
+			if (IsSubQuery())
+				queryText.Append(" ) ");
+			else
+				queryText.Append("; ");
+
+			statementStack.Pop();
 		}
 
 		public virtual void WriteUpdateStatement(
@@ -112,6 +143,11 @@ namespace DataKit.SQL.Providers
 			QueryExpressionVisitor queryExpressionVisitor
 			)
 		{
+			statementStack.Push(updateStatementQueryExpression);
+
+			if (IsSubQuery())
+				queryText.Append(" ( ");
+
 			queryText.Append("UPDATE ");
 			WriteIfNotNull(updateStatementQueryExpression.Into, queryExpressionVisitor);
 			queryText.Append(" SET ");
@@ -125,6 +161,13 @@ namespace DataKit.SQL.Providers
 					queryText.Append(", ");
 			}
 			WriteIfNotNull(updateStatementQueryExpression.Where, queryExpressionVisitor);
+
+			if (IsSubQuery())
+				queryText.Append(" ) ");
+			else
+				queryText.Append("; ");
+
+			statementStack.Pop();
 		}
 
 		public virtual void WriteDeleteStatement(
@@ -132,9 +175,21 @@ namespace DataKit.SQL.Providers
 			QueryExpressionVisitor queryExpressionVisitor
 			)
 		{
+			statementStack.Push(deleteStatementQueryExpression);
+
+			if (IsSubQuery())
+				queryText.Append(" ( ");
+
 			queryText.Append("DELETE ");
 			WriteIfNotNull(deleteStatementQueryExpression.From, queryExpressionVisitor);
 			WriteIfNotNull(deleteStatementQueryExpression.Where, queryExpressionVisitor);
+
+			if (IsSubQuery())
+				queryText.Append(" ) ");
+			else
+				queryText.Append("; ");
+
+			statementStack.Pop();
 		}
 
 		public virtual void WriteProjection(

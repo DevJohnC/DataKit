@@ -16,6 +16,8 @@
 				str = str.Replace(" .", ".");
 			while (str.Contains(". "))
 				str = str.Replace(". ", ".");
+			while (str.Contains(" ;"))
+				str = str.Replace(" ;", ";");
 			return str;
 		}
 	}
