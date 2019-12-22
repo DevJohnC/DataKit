@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.0.0-indev</Version>
+    <Authors>John Carruthers</Authors>
+    <Product>DataKit</Product>
+    <Description>SQLite3 provider for DataKit.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/DevJohnC/DataKit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DevJohnC/DataKit</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
