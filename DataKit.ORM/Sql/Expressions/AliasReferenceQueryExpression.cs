@@ -2,20 +2,22 @@
 
 namespace DataKit.ORM.Sql.Expressions
 {
-	public class AliasReferenceQueryExpression : QueryExpression, IExtensionExpression
+	public class AliasReferenceQueryExpression : IdentifierQueryExpression
 	{
 		public IAliasIdentifier AliasIdentifier { get; }
 
-		public override ExpressionNodeType NodeType => ExpressionNodeType.Extension;
+		public override string IdentifierName => AliasIdentifier.AliasIdentifier;
 
-		public AliasReferenceQueryExpression(IAliasIdentifier aliasIdentifier)
+		public AliasReferenceQueryExpression(IAliasIdentifier aliasIdentifier) : base(null)
 		{
 			AliasIdentifier = aliasIdentifier;
 		}
 
-		public void Visit(QueryExpressionVisitor visitor)
+		protected override QueryExpression Accept(QueryExpressionVisitor expressionVisitor)
 		{
-			visitor.Visit(new AliasIdentifierExpression(AliasIdentifier.AliasIdentifier));
+			return expressionVisitor.Visit(
+				QueryExpression.AliasReference(AliasIdentifier.AliasIdentifier)
+				);
 		}
 	}
 }

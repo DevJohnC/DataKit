@@ -11,7 +11,7 @@ namespace DataKit.SQL.QueryExpressions
 
 		public override ExpressionType ExpressionType => ExpressionType.Identifier;
 
-		public string IdentifierName { get; }
+		public virtual string IdentifierName { get; }
 
 		protected override QueryExpression Accept(QueryExpressionVisitor expressionVisitor)
 			=> expressionVisitor.VisitIdentifier(this);
