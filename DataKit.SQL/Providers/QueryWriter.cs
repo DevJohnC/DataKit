@@ -84,6 +84,16 @@ namespace DataKit.SQL.Providers
 			WriteIfNotNull(selectStatementQueryExpression.Limit, queryExpressionVisitor);
 		}
 
+		public virtual void WriteDeleteStatement(
+			DeleteStatementQueryExpression deleteStatementQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryText.Append("DELETE ");
+			WriteIfNotNull(deleteStatementQueryExpression.From, queryExpressionVisitor);
+			WriteIfNotNull(deleteStatementQueryExpression.Where, queryExpressionVisitor);
+		}
+
 		public virtual void WriteProjection(
 			ProjectionQueryExpression projectionQueryExpression,
 			QueryExpressionVisitor queryExpressionVisitor)

@@ -26,6 +26,9 @@ namespace DataKit.SQL.Providers
 					case SelectStatementQueryExpression select:
 						_writer.WriteSelectStatement(select, this);
 						break;
+					case DeleteStatementQueryExpression delete:
+						_writer.WriteDeleteStatement(delete, this);
+						break;
 				}
 				return base.VisitStatement(statementQueryExpression);
 			}

@@ -26,6 +26,17 @@ namespace DataKit.SQL.QueryExpressions
 				);
 		}
 
+		public static DeleteStatementQueryExpression Delete(
+			QueryExpression from,
+			QueryExpression where = null
+			)
+		{
+			return new DeleteStatementQueryExpression(
+				new FromQueryExpression(from),
+				where != null ? new WhereQueryExpression(where) : null
+				);
+		}
+
 		public static JoinQueryExpression Join(QueryExpression targetExpression, ColumnIdentifierQueryExpression leftColumn, ColumnIdentifierQueryExpression rightColumn,
 			JoinDirection direction = JoinDirection.Inner)
 		{

@@ -1,4 +1,6 @@
-﻿namespace DataKit.SQL.QueryExpressions
+﻿using System;
+
+namespace DataKit.SQL.QueryExpressions
 {
 	public abstract class StatementQueryExpression : ExecutableQueryExpression
 	{
@@ -40,5 +42,17 @@
 		public new GroupByCollectionQueryExpression GroupBy { get; }
 
 		public new LimitQueryExpression Limit { get; }
+	}
+
+	public class DeleteStatementQueryExpression : StatementQueryExpression
+	{
+		public DeleteStatementQueryExpression(FromQueryExpression from, WhereQueryExpression where)
+		{
+			From = from ?? throw new ArgumentNullException(nameof(from));
+			Where = where;
+		}
+
+		public FromQueryExpression From { get; }
+		public WhereQueryExpression Where { get; }
 	}
 }

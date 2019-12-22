@@ -1,5 +1,4 @@
-﻿using DataKit.SQL.Providers;
-using DataKit.SQL.QueryExpressions;
+﻿using DataKit.SQL.QueryExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
@@ -14,7 +13,7 @@ namespace DataKit.SQL.UnitTests
 			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.CountFunction() }
 				);
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT COUNT()", sql);
 		}
 
@@ -26,7 +25,7 @@ namespace DataKit.SQL.UnitTests
 					QueryExpression.Distinct(QueryExpression.Column("Id"))
 					) }
 				);
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT COUNT(DISTINCT [Id])", sql);
 		}
 
@@ -37,7 +36,7 @@ namespace DataKit.SQL.UnitTests
 				new[] { QueryExpression.Column("Column1"), QueryExpression.Column("Column2") },
 				from: QueryExpression.Table("TestTable")
 				);
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT [Column1], [Column2] FROM [TestTable]", sql);
 		}
 
@@ -48,7 +47,7 @@ namespace DataKit.SQL.UnitTests
 				new[] { QueryExpression.As(QueryExpression.Column("TestColumn"), "aliasTest", out var _) },
 				from: QueryExpression.Table("TestTable")
 				);
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT [TestColumn] AS [aliasTest] FROM [TestTable]", sql);
 		}
 
@@ -62,7 +61,7 @@ namespace DataKit.SQL.UnitTests
 					) },
 				from: QueryExpression.Table("TestTable")
 				);
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT [Column] IN SELECT [Id] FROM [OtherTable] FROM [TestTable]", sql);
 		}
 
@@ -79,7 +78,7 @@ namespace DataKit.SQL.UnitTests
 						QueryExpression.AreNotEqual(QueryExpression.Column("Left"), QueryExpression.Column("Right"))
 					))
 				);
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT * FROM [TestTable] WHERE ([Left] = [Right] AND ([Left] = [Right] OR [Left] != [Right]))", sql);
 		}
 
@@ -91,7 +90,7 @@ namespace DataKit.SQL.UnitTests
 				from: QueryExpression.Table("TestTable"),
 				where: QueryExpression.AreEqual(QueryExpression.Column("Column"), QueryExpression.Parameter("myParameter"))
 				);
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT * FROM [TestTable] WHERE [Column] = @myParameter", sql);
 		}
 
@@ -103,7 +102,7 @@ namespace DataKit.SQL.UnitTests
 				from: QueryExpression.Table("TestTable"),
 				where: QueryExpression.AreEqual(QueryExpression.Column("Column"), QueryExpression.Value("myValue"))
 				);
-			var sql = ConvertToSql(queryExpression, out var parameters);
+			var sql = TestHelpers.ConvertToSql(queryExpression, out var parameters);
 			var firstParameter = parameters.First();
 			Assert.AreEqual("myValue", firstParameter.Value);
 			Assert.AreEqual($"SELECT * FROM [TestTable] WHERE [Column] = @{firstParameter.Key}", sql);
@@ -120,7 +119,7 @@ namespace DataKit.SQL.UnitTests
 					QueryExpression.OrderBy(QueryExpression.Column("Column1")),
 					QueryExpression.OrderByDescending(QueryExpression.Column("Column2"))
 				});
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT * FROM [TestTable] ORDER BY [Column1], [Column2] DESC", sql);
 		}
 
@@ -135,7 +134,7 @@ namespace DataKit.SQL.UnitTests
 					QueryExpression.GroupBy(QueryExpression.Column("Column1")),
 					QueryExpression.GroupBy(QueryExpression.Column("Column2"))
 				});
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT * FROM [TestTable] GROUP BY [Column1], [Column2]", sql);
 		}
 
@@ -147,7 +146,7 @@ namespace DataKit.SQL.UnitTests
 				from: QueryExpression.Table("TestTable"),
 				limit: QueryExpression.Limit(QueryExpression.Value(1))
 				);
-			var sql = ConvertToSql(queryExpression, out var parameters);
+			var sql = TestHelpers.ConvertToSql(queryExpression, out var parameters);
 			var limitParameter = parameters.First();
 
 			Assert.AreEqual(1, limitParameter.Value);
@@ -162,7 +161,7 @@ namespace DataKit.SQL.UnitTests
 				from: QueryExpression.Table("TestTable"),
 				limit: QueryExpression.Limit(QueryExpression.Value(1), QueryExpression.Value(2))
 				);
-			var sql = ConvertToSql(queryExpression, out var parameters);
+			var sql = TestHelpers.ConvertToSql(queryExpression, out var parameters);
 			var limitParameter = parameters.First();
 			var offsetParameter = parameters.Skip(1).First();
 
@@ -183,22 +182,8 @@ namespace DataKit.SQL.UnitTests
 				{
 					QueryExpression.Join(rightTable, QueryExpression.Column("RightId", leftTable), QueryExpression.Column("Id", rightTable))
 				});
-			var sql = ConvertToSql(queryExpression);
+			var sql = TestHelpers.ConvertToSql(queryExpression);
 			Assert.AreEqual("SELECT * FROM [LeftTable] INNER JOIN [RightTable] ON [LeftTable].[RightId] = [RightTable].[Id]", sql);
-		}
-
-		private string ConvertToSql(QueryExpression queryExpression)
-		{
-			return ConvertToSql(queryExpression, out var _);
-		}
-
-		private string ConvertToSql(QueryExpression queryExpression, out ParameterBag valueParameters)
-		{
-			var queryWriter = new QueryWriter();
-			var converter = new QueryConverter();
-			converter.WriteQuery(queryWriter, queryExpression);
-			valueParameters = queryWriter.Parameters;
-			return queryWriter.ToString().ReduceWhitespace().Trim();
 		}
 	}
 }
