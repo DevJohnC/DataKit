@@ -12,12 +12,14 @@
 	{
 		public SelectStatementQueryExpression(
 			ProjectionQueryExpression projection, FromQueryExpression from,
+			JoinQueryExpression[] joins,
 			WhereQueryExpression where, HavingQueryExpression having,
 			OrderByQueryExpression[] orderBy, GroupByQueryExpression[] groupBy,
 			LimitQueryExpression limit)
 		{
 			Projection = projection;
 			From = from;
+			Joins = joins;
 			Where = where;
 			Having = having;
 			OrderBy = (orderBy == null || orderBy.Length < 1) ? null : new OrderByCollectionQueryExpression(orderBy);
@@ -28,7 +30,7 @@
 		public ProjectionQueryExpression Projection { get; }
 
 		public FromQueryExpression From { get; }
-
+		public JoinQueryExpression[] Joins { get; }
 		public WhereQueryExpression Where { get; }
 
 		public HavingQueryExpression Having { get; }

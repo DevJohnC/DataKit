@@ -70,7 +70,8 @@ namespace DataKit.SQL.Providers
 
 			WriteIfNotNull(selectStatementQueryExpression.From, queryExpressionVisitor);
 
-			//  joins
+			if (selectStatementQueryExpression.Joins != null && selectStatementQueryExpression.Joins.Length > 0)
+				WriteExpressionCollection(selectStatementQueryExpression.Joins, queryExpressionVisitor, seperator: " ");
 
 			WriteIfNotNull(selectStatementQueryExpression.Where, queryExpressionVisitor);
 
@@ -96,6 +97,29 @@ namespace DataKit.SQL.Providers
 		{
 			queryText.Append(" FROM ");
 			queryExpressionVisitor.Visit(fromQueryExpression.Expression);
+		}
+
+		public virtual void WriteJoinQueryParameter(
+			JoinQueryExpression joinQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			switch (joinQueryExpression.Direction)
+			{
+				case JoinDirection.Inner:
+					queryText.Append(" INNER ");
+					break;
+				case JoinDirection.Left:
+					queryText.Append(" LEFT OUTER ");
+					break;
+				case JoinDirection.Right:
+					queryText.Append(" RIGHT OUTER ");
+					break;
+			}
+			queryText.Append(" JOIN ");
+			WriteIfNotNull(joinQueryExpression.TargetExpression, queryExpressionVisitor);
+			queryText.Append(" ON ");
+			WriteIfNotNull(joinQueryExpression.OnExpression, queryExpressionVisitor);
 		}
 
 		public virtual void WriteWhereQueryParameters(

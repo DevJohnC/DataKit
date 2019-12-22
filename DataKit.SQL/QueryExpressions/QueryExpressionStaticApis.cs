@@ -5,9 +5,10 @@ namespace DataKit.SQL.QueryExpressions
 {
 	public partial class QueryExpression
 	{
-		public static SelectStatementQueryExpression SelectStatement(
+		public static SelectStatementQueryExpression Select(
 			QueryExpression[] projection,
 			QueryExpression from = null,
+			JoinQueryExpression[] joins = null,
 			QueryExpression where = null,
 			QueryExpression having = null,
 			OrderByQueryExpression[] orderBy = null,
@@ -18,10 +19,24 @@ namespace DataKit.SQL.QueryExpressions
 			return new SelectStatementQueryExpression(
 				new ProjectionQueryExpression(projection),
 				from != null ? new FromQueryExpression(from) : null,
+				joins,
 				where != null ? new WhereQueryExpression(where) : null,
 				having != null ? new HavingQueryExpression(having) : null,
 				orderBy, groupBy, limit
 				);
+		}
+
+		public static JoinQueryExpression Join(QueryExpression targetExpression, ColumnIdentifierQueryExpression leftColumn, ColumnIdentifierQueryExpression rightColumn,
+			JoinDirection direction = JoinDirection.Inner)
+		{
+			return new JoinQueryExpression(targetExpression, direction,
+				AreEqual(leftColumn, rightColumn));
+		}
+
+		public static JoinQueryExpression Join(QueryExpression targetExpression, QueryExpression onExpression,
+			JoinDirection direction = JoinDirection.Inner)
+		{
+			return new JoinQueryExpression(targetExpression, direction, onExpression);
 		}
 
 		public static ParameterReferenceQueryExpression Parameter(string parameterName)

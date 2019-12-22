@@ -96,9 +96,30 @@ namespace DataKit.SQL.QueryExpressions
 		public new QueryExpression Limit { get; }
 	}
 
+	public class JoinQueryExpression : QueryParameterQueryExpression
+	{
+		public JoinQueryExpression(QueryExpression targetExpression, JoinDirection direction, QueryExpression onExpression)
+		{
+			TargetExpression = targetExpression ?? throw new ArgumentNullException(nameof(targetExpression));
+			Direction = direction;
+			OnExpression = onExpression ?? throw new ArgumentNullException(nameof(onExpression));
+		}
+
+		public QueryExpression TargetExpression { get; }
+		public JoinDirection Direction { get; }
+		public QueryExpression OnExpression { get; }
+	}
+
 	public enum OrderByDirection
 	{
 		Ascending,
 		Descending
+	}
+
+	public enum JoinDirection
+	{
+		Left,
+		Right,
+		Inner
 	}
 }

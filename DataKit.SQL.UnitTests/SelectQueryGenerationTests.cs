@@ -11,7 +11,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_Select_With_Projection_Only()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.CountFunction() }
 				);
 			var sql = ConvertToSql(queryExpression);
@@ -21,7 +21,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_Select_With_Multiple_Projections()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.Column("Column1"), QueryExpression.Column("Column2") },
 				from: QueryExpression.Table("TestTable")
 				);
@@ -32,7 +32,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_Select_With_Alias()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.As(QueryExpression.Column("TestColumn"), "aliasTest", out var _) },
 				from: QueryExpression.Table("TestTable")
 				);
@@ -43,10 +43,10 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_Select_With_In_Query()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.IsIn(
 					QueryExpression.Column("Column"),
-					QueryExpression.SelectStatement(new[] { QueryExpression.Column("Id") }, from: QueryExpression.Table("OtherTable"))
+					QueryExpression.Select(new[] { QueryExpression.Column("Id") }, from: QueryExpression.Table("OtherTable"))
 					) },
 				from: QueryExpression.Table("TestTable")
 				);
@@ -57,7 +57,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_Select_With_Nested_Conditions()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.All() },
 				from: QueryExpression.Table("TestTable"),
 				where: QueryExpression.AndAlso(
@@ -74,7 +74,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_Select_With_Parameter_Reference()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.All() },
 				from: QueryExpression.Table("TestTable"),
 				where: QueryExpression.AreEqual(QueryExpression.Column("Column"), QueryExpression.Parameter("myParameter"))
@@ -86,7 +86,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_Select_With_Value()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.All() },
 				from: QueryExpression.Table("TestTable"),
 				where: QueryExpression.AreEqual(QueryExpression.Column("Column"), QueryExpression.Value("myValue"))
@@ -100,7 +100,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_OrderBy_Query()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.All() },
 				from: QueryExpression.Table("TestTable"),
 				orderBy: new[]
@@ -115,7 +115,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_GroupBy_Query()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.All() },
 				from: QueryExpression.Table("TestTable"),
 				groupBy: new[]
@@ -130,7 +130,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_Limit_Query()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.All() },
 				from: QueryExpression.Table("TestTable"),
 				limit: QueryExpression.Limit(QueryExpression.Value(1))
@@ -145,7 +145,7 @@ namespace DataKit.SQL.UnitTests
 		[TestMethod]
 		public void Can_Write_Limit_And_Offset_Query()
 		{
-			var queryExpression = QueryExpression.SelectStatement(
+			var queryExpression = QueryExpression.Select(
 				new[] { QueryExpression.All() },
 				from: QueryExpression.Table("TestTable"),
 				limit: QueryExpression.Limit(QueryExpression.Value(1), QueryExpression.Value(2))
@@ -157,6 +157,22 @@ namespace DataKit.SQL.UnitTests
 			Assert.AreEqual(1, limitParameter.Value);
 			Assert.AreEqual(2, offsetParameter.Value);
 			Assert.AreEqual($"SELECT * FROM [TestTable] LIMIT @{limitParameter.Key} OFFSET @{offsetParameter.Key}", sql);
+		}
+
+		[TestMethod]
+		public void Can_Write_Join_Query()
+		{
+			var leftTable = QueryExpression.Table("LeftTable");
+			var rightTable = QueryExpression.Table("RightTable");
+			var queryExpression = QueryExpression.Select(
+				new[] { QueryExpression.All() },
+				from: leftTable,
+				joins: new[]
+				{
+					QueryExpression.Join(rightTable, QueryExpression.Column("RightId", leftTable), QueryExpression.Column("Id", rightTable))
+				});
+			var sql = ConvertToSql(queryExpression);
+			Assert.AreEqual("SELECT * FROM [LeftTable] INNER JOIN [RightTable] ON [LeftTable].[RightId] = [RightTable].[Id]", sql);
 		}
 
 		private string ConvertToSql(QueryExpression queryExpression)

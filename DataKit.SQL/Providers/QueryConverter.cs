@@ -43,6 +43,9 @@ namespace DataKit.SQL.Providers
 					case FromQueryExpression from:
 						_writer.WriteFromQueryParameter(from, this);
 						break;
+					case JoinQueryExpression join:
+						_writer.WriteJoinQueryParameter(join, this);
+						break;
 					case WhereQueryExpression where:
 						_writer.WriteWhereQueryParameters(where, this);
 						break;

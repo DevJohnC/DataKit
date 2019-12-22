@@ -20,7 +20,7 @@ namespace DataKit.SQL.Sqlite3.Tests
 					));
 
 				var table = QueryExpression.Table("TestTable");
-				using (var queryResult = dataProvider.ExecuteReader(QueryExpression.SelectStatement(
+				using (var queryResult = dataProvider.ExecuteReader(QueryExpression.Select(
 					projection: new[] { QueryExpression.Column("Value", table) },
 					from: table
 					)))
@@ -48,7 +48,7 @@ namespace DataKit.SQL.Sqlite3.Tests
 				{
 					{ "valueParameter", "Hello World" }
 				};
-				using (var queryResult = dataProvider.ExecuteReader(QueryExpression.SelectStatement(
+				using (var queryResult = dataProvider.ExecuteReader(QueryExpression.Select(
 					projection: new[] { QueryExpression.All() },
 					from: QueryExpression.Table("TestTable"),
 					where: QueryExpression.AreEqual(QueryExpression.Column("Value"), QueryExpression.Parameter("valueParameter"))
@@ -73,7 +73,7 @@ namespace DataKit.SQL.Sqlite3.Tests
 					"INSERT INTO TestTable VALUES ('Hello World')"
 					));
 
-				using (var queryResult = dataProvider.ExecuteReader(QueryExpression.SelectStatement(
+				using (var queryResult = dataProvider.ExecuteReader(QueryExpression.Select(
 					projection: new[] { QueryExpression.All() },
 					from: QueryExpression.Table("TestTable"),
 					where: QueryExpression.AreEqual(QueryExpression.Column("Value"), QueryExpression.Value("Hello World"))
