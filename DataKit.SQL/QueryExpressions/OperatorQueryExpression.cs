@@ -69,7 +69,8 @@ namespace DataKit.SQL.QueryExpressions
 	public enum UnaryOperator
 	{
 		IsNull,
-		IsNotNull
+		IsNotNull,
+		Distinct
 	}
 
 	public enum BinaryOperator

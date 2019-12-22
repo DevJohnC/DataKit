@@ -19,6 +19,18 @@ namespace DataKit.SQL.UnitTests
 		}
 
 		[TestMethod]
+		public void Can_Write_Select_With_Distinct_Count()
+		{
+			var queryExpression = QueryExpression.Select(
+				new[] { QueryExpression.CountFunction(
+					QueryExpression.Distinct(QueryExpression.Column("Id"))
+					) }
+				);
+			var sql = ConvertToSql(queryExpression);
+			Assert.AreEqual("SELECT COUNT(DISTINCT [Id])", sql);
+		}
+
+		[TestMethod]
 		public void Can_Write_Select_With_Multiple_Projections()
 		{
 			var queryExpression = QueryExpression.Select(

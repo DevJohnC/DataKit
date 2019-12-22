@@ -100,6 +100,11 @@ namespace DataKit.SQL.QueryExpressions
 			return new UnaryOperatorQueryExpression(expression, UnaryOperator.IsNotNull);
 		}
 
+		public static UnaryOperatorQueryExpression Distinct(QueryExpression expression)
+		{
+			return new UnaryOperatorQueryExpression(expression, UnaryOperator.Distinct);
+		}
+
 		public static ColumnIdentifierQueryExpression All(IdentifierQueryExpression parent = null)
 		{
 			return Column("*", parent);

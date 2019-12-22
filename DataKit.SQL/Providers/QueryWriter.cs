@@ -224,14 +224,19 @@ namespace DataKit.SQL.Providers
 			QueryExpressionVisitor queryExpressionVisitor
 			)
 		{
-			WriteIfNotNull(unaryOperatorQueryExpression.Expression, queryExpressionVisitor);
 			switch (unaryOperatorQueryExpression.Operator)
 			{
 				case UnaryOperator.IsNull:
+					WriteIfNotNull(unaryOperatorQueryExpression.Expression, queryExpressionVisitor);
 					queryText.Append(" IS NULL ");
 					break;
 				case UnaryOperator.IsNotNull:
+					WriteIfNotNull(unaryOperatorQueryExpression.Expression, queryExpressionVisitor);
 					queryText.Append(" IS NOT NULL ");
+					break;
+				case UnaryOperator.Distinct:
+					queryText.Append(" DISTINCT ");
+					WriteIfNotNull(unaryOperatorQueryExpression.Expression, queryExpressionVisitor);
 					break;
 			}
 		}
