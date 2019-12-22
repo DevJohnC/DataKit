@@ -5,6 +5,16 @@ namespace DataKit.SQL.QueryExpressions
 {
 	public partial class QueryExpression
 	{
+		public static MultipleStatementQueryExpression Many(IEnumerable<StatementQueryExpression> statements)
+		{
+			return Many(statements.ToArray());
+		}
+
+		public static MultipleStatementQueryExpression Many(params StatementQueryExpression[] statements)
+		{
+			return new MultipleStatementQueryExpression(statements);
+		}
+
 		public static SelectStatementQueryExpression Select(
 			QueryExpression[] projection,
 			QueryExpression from = null,

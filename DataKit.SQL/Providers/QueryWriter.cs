@@ -65,6 +65,14 @@ namespace DataKit.SQL.Providers
 				queryText.Append($" [{identifierQueryExpression.IdentifierName}] ");
 		}
 
+		public virtual void WriteMultipleStatements(
+			MultipleStatementQueryExpression multipleStatementQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			WriteExpressionCollection(multipleStatementQueryExpression.Statements, queryExpressionVisitor, seperator: " ");
+		}
+
 		public virtual void WriteSelectStatement(
 			SelectStatementQueryExpression selectStatementQueryExpression,
 			QueryExpressionVisitor queryExpressionVisitor)

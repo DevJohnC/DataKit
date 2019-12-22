@@ -8,6 +8,21 @@ namespace DataKit.SQL.UnitTests
 	public class SelectQueryGenerationTests
 	{
 		[TestMethod]
+		public void Can_Write_Multiple_Statements()
+		{
+			var queryExpression = 
+				QueryExpression.Many(
+				QueryExpression.Select(
+					new[] { QueryExpression.CountFunction() }
+				),
+				QueryExpression.Select(
+					new[] { QueryExpression.CountFunction() }
+				));
+			var sql = TestHelpers.ConvertToSql(queryExpression);
+			Assert.AreEqual("SELECT COUNT(); SELECT COUNT();", sql);
+		}
+
+		[TestMethod]
 		public void Can_Write_Select_With_Projection_Only()
 		{
 			var queryExpression = QueryExpression.Select(

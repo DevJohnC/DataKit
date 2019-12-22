@@ -10,6 +10,16 @@ namespace DataKit.SQL.QueryExpressions
 			=> expressionVisitor.VisitStatement(this);
 	}
 
+	public class MultipleStatementQueryExpression : StatementQueryExpression
+	{
+		public MultipleStatementQueryExpression(StatementQueryExpression[] statements)
+		{
+			Statements = statements ?? throw new ArgumentNullException(nameof(statements));
+		}
+
+		public StatementQueryExpression[] Statements { get; }
+	}
+
 	public class SelectStatementQueryExpression : StatementQueryExpression
 	{
 		public SelectStatementQueryExpression(

@@ -23,6 +23,9 @@ namespace DataKit.SQL.Providers
 			{
 				switch (statementQueryExpression)
 				{
+					case MultipleStatementQueryExpression multiple:
+						_writer.WriteMultipleStatements(multiple, this);
+						break;
 					case SelectStatementQueryExpression select:
 						_writer.WriteSelectStatement(select, this);
 						break;
