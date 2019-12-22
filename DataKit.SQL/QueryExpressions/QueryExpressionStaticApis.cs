@@ -257,6 +257,11 @@ namespace DataKit.SQL.QueryExpressions
 			return new TableIdentifierQueryExpression(tableName);
 		}
 
+		public static AliasIdentifierQueryExpression AliasReference(string aliasName)
+		{
+			return new AliasIdentifierQueryExpression(aliasName);
+		}
+
 		public static OrderByQueryExpression OrderBy(QueryExpression expression)
 		{
 			return new OrderByQueryExpression(expression, OrderByDirection.Ascending);
