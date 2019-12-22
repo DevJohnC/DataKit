@@ -21,6 +21,16 @@ namespace DataKit.SQL.QueryExpressions
 		public QueryExpression Expression { get; }
 	}
 
+	public class IntoQueryExpression : QueryParameterQueryExpression
+	{
+		public IntoQueryExpression(QueryExpression from)
+		{
+			Expression = from ?? throw new ArgumentNullException(nameof(from));
+		}
+
+		public QueryExpression Expression { get; }
+	}
+
 	public class WhereQueryExpression : QueryParameterQueryExpression
 	{
 		public WhereQueryExpression(QueryExpression where)

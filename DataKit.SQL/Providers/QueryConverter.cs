@@ -26,6 +26,9 @@ namespace DataKit.SQL.Providers
 					case SelectStatementQueryExpression select:
 						_writer.WriteSelectStatement(select, this);
 						break;
+					case InsertStatementQueryExpression insert:
+						_writer.WriteInsertStatement(insert, this);
+						break;
 					case DeleteStatementQueryExpression delete:
 						_writer.WriteDeleteStatement(delete, this);
 						break;
@@ -45,6 +48,9 @@ namespace DataKit.SQL.Providers
 				{
 					case FromQueryExpression from:
 						_writer.WriteFromQueryParameter(from, this);
+						break;
+					case IntoQueryExpression into:
+						_writer.WriteIntoQueryParameter(into, this);
 						break;
 					case JoinQueryExpression join:
 						_writer.WriteJoinQueryParameter(join, this);

@@ -44,6 +44,20 @@ namespace DataKit.SQL.QueryExpressions
 		public new LimitQueryExpression Limit { get; }
 	}
 
+	public class InsertStatementQueryExpression : StatementQueryExpression
+	{
+		public InsertStatementQueryExpression(IntoQueryExpression into, ColumnIdentifierQueryExpression[] columns, QueryExpression[][] rowsExpressions)
+		{
+			Into = into ?? throw new ArgumentNullException(nameof(into));
+			Columns = columns ?? throw new ArgumentNullException(nameof(columns));
+			RowsExpressions = rowsExpressions ?? throw new ArgumentNullException(nameof(rowsExpressions));
+		}
+
+		public IntoQueryExpression Into { get; }
+		public ColumnIdentifierQueryExpression[] Columns { get; }
+		public QueryExpression[][] RowsExpressions { get; }
+	}
+
 	public class DeleteStatementQueryExpression : StatementQueryExpression
 	{
 		public DeleteStatementQueryExpression(FromQueryExpression from, WhereQueryExpression where)

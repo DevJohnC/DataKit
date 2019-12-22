@@ -26,6 +26,19 @@ namespace DataKit.SQL.QueryExpressions
 				);
 		}
 
+		public static InsertStatementQueryExpression Insert(
+			QueryExpression into,
+			ColumnIdentifierQueryExpression[] columns,
+			params QueryExpression[][] rows
+			)
+		{
+			return new InsertStatementQueryExpression(
+				new IntoQueryExpression(into),
+				columns,
+				rows
+				);
+		}
+
 		public static DeleteStatementQueryExpression Delete(
 			QueryExpression from,
 			QueryExpression where = null

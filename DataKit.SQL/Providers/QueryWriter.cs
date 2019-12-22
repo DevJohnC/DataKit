@@ -84,6 +84,29 @@ namespace DataKit.SQL.Providers
 			WriteIfNotNull(selectStatementQueryExpression.Limit, queryExpressionVisitor);
 		}
 
+		public virtual void WriteInsertStatement(
+			InsertStatementQueryExpression insertStatementQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryText.Append("INSERT ");
+			WriteIfNotNull(insertStatementQueryExpression.Into, queryExpressionVisitor);
+
+			queryText.Append(" ( ");
+			WriteExpressionCollection(insertStatementQueryExpression.Columns, queryExpressionVisitor);
+			queryText.Append(" ) ");
+			queryText.Append(" VALUES ");
+
+			for(var i = 0; i < insertStatementQueryExpression.RowsExpressions.Length; i++)
+			{
+				queryText.Append(" ( ");
+				WriteExpressionCollection(insertStatementQueryExpression.RowsExpressions[i], queryExpressionVisitor);
+				queryText.Append(" ) ");
+				if (i < insertStatementQueryExpression.RowsExpressions.Length - 1)
+					queryText.Append(", ");
+			}
+		}
+
 		public virtual void WriteDeleteStatement(
 			DeleteStatementQueryExpression deleteStatementQueryExpression,
 			QueryExpressionVisitor queryExpressionVisitor
@@ -107,6 +130,15 @@ namespace DataKit.SQL.Providers
 		{
 			queryText.Append(" FROM ");
 			queryExpressionVisitor.Visit(fromQueryExpression.Expression);
+		}
+
+		public virtual void WriteIntoQueryParameter(
+			IntoQueryExpression intoQueryExpression,
+			QueryExpressionVisitor queryExpressionVisitor
+			)
+		{
+			queryText.Append(" INTO ");
+			queryExpressionVisitor.Visit(intoQueryExpression.Expression);
 		}
 
 		public virtual void WriteJoinQueryParameter(
