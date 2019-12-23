@@ -3,6 +3,7 @@ using DataKit.ORM.Schema;
 using DataKit.ORM.Sql;
 using DataKit.SQL.Providers;
 using System;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace DataKit.ORM
@@ -74,12 +75,34 @@ namespace DataKit.ORM
 			return _transaction;
 		}
 
+		public Transaction CreateTransaction(IsolationLevel isolationLevel)
+		{
+			if (_transaction != null)
+				return _transaction;
+
+			var dbTransaction = _dataProvider.CreateTransaction(isolationLevel);
+
+			_transaction = new Transaction(dbTransaction);
+			return _transaction;
+		}
+
 		public async Task<Transaction> CreateTransactionAsync()
 		{
 			if (_transaction != null)
 				return _transaction;
 
 			var dbTransaction = await _dataProvider.CreateTransactionAsync();
+
+			_transaction = new Transaction(dbTransaction);
+			return _transaction;
+		}
+
+		public async Task<Transaction> CreateTransactionAsync(IsolationLevel isolationLevel)
+		{
+			if (_transaction != null)
+				return _transaction;
+
+			var dbTransaction = await _dataProvider.CreateTransactionAsync(isolationLevel);
 
 			_transaction = new Transaction(dbTransaction);
 			return _transaction;

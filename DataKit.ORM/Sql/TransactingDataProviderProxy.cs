@@ -1,6 +1,7 @@
 ﻿using DataKit.SQL.Providers;
 using DataKit.SQL.QueryExpressions;
 using System;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,9 +35,23 @@ namespace DataKit.ORM.Sql
 			return transaction;
 		}
 
+		public ITransaction CreateTransaction(IsolationLevel isolationLevel)
+		{
+			var transaction = new Transaction(_provider.CreateTransaction(isolationLevel), this);
+			_activeQueryProvider = transaction;
+			return transaction;
+		}
+
 		public async Task<ITransaction> CreateTransactionAsync()
 		{
 			var transaction = new Transaction(await _provider.CreateTransactionAsync(), this);
+			_activeQueryProvider = transaction;
+			return transaction;
+		}
+
+		public async Task<ITransaction> CreateTransactionAsync(IsolationLevel isolationLevel)
+		{
+			var transaction = new Transaction(await _provider.CreateTransactionAsync(isolationLevel), this);
 			_activeQueryProvider = transaction;
 			return transaction;
 		}
