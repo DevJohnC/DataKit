@@ -1,9 +1,8 @@
 ﻿using DataKit.Mapping.AspNetCore;
 using DataKit.ORM.AspNetCore.Sql;
+using DataKit.SQL.QueryExpressions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Silk.Data.SQL;
-using Silk.Data.SQL.Expressions;
 
 namespace DataKit.ORM.AspNetCore.UnitTests
 {
@@ -47,11 +46,12 @@ namespace DataKit.ORM.AspNetCore.UnitTests
 					});
 				});
 
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					"TestEntity",
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int())
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE TestEntity
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				using (var scope = container.CreateScope())
 				{
@@ -91,11 +91,12 @@ namespace DataKit.ORM.AspNetCore.UnitTests
 					});
 				});
 
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					"TestEntity",
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int())
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE TestEntity
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				using (var scope = container.CreateScope())
 				{

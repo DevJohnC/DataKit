@@ -28,7 +28,8 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		public void GroupBy<TValue>(SqlValueExpression<TEntity, TValue> expression)
 		{
-			_expressions.Add(expression);
+			_expressions.Add(new SqlValueExpression<TEntity, TValue>(
+				QueryExpression.GroupBy(expression.QueryExpression), expression.Joins));
 		}
 
 		public void GroupBy<TValue>(Expression<Func<TEntity, TValue>> expression)

@@ -36,7 +36,7 @@ namespace DataKit.SQL.QueryExpressions
 	{
 		public ValueParameterQueryExpression(object value)
 		{
-			Value = value ?? throw new ArgumentNullException(nameof(value));
+			Value = value;
 		}
 
 		public new object Value { get; }

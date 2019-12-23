@@ -1,6 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Silk.Data.SQL.Providers;
-using Silk.Data.SQL.SQLite3;
+﻿using DataKit.SQL.Sqlite3;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace DataKit.ORM.AspNetCore.UnitTests
@@ -16,9 +15,9 @@ namespace DataKit.ORM.AspNetCore.UnitTests
 			return services.BuildServiceProvider();
 		}
 
-		public static IDataProvider CreateTestProvider()
+		public static Sqlite3DataProvider CreateTestProvider()
 		{
-			return new SQLite3DataProvider("Data Source=:memory:;Mode=Memory");
+			return Sqlite3DataProvider.InMemory();
 		}
 	}
 }

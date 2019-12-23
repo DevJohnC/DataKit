@@ -6,7 +6,7 @@ namespace DataKit.SQL.QueryExpressions
 	{
 		protected IdentifierQueryExpression(string identifierName)
 		{
-			IdentifierName = identifierName ?? throw new ArgumentNullException(nameof(identifierName));
+			IdentifierName = identifierName;
 		}
 
 		public override ExpressionType ExpressionType => ExpressionType.Identifier;

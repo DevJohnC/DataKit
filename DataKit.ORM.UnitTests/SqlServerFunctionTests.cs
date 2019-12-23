@@ -3,11 +3,10 @@ using DataKit.ORM.Schema;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
 using DataKit.ORM.Sql.Expressions.MethodConversion;
-using Silk.Data.SQL;
-using Silk.Data.SQL.Expressions;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.ORM.UnitTests
 {
@@ -24,17 +23,18 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new [] { QueryExpression.Value(1) },
+					new [] { QueryExpression.Value(2) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
@@ -53,17 +53,18 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value(1) },
+					new[] { QueryExpression.Value(2) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
@@ -82,17 +83,18 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value(1) },
+					new[] { QueryExpression.Value(2) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
@@ -111,17 +113,18 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value(1) },
+					new[] { QueryExpression.Value(2) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
@@ -140,17 +143,18 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Text(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] TEXT
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { "This is like" },
-					new object[] { "Not so much" }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value("This is like") },
+					new[] { QueryExpression.Value("Not so much") }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity<string>>(sqlDataModel, dataProvider);
@@ -169,18 +173,19 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 },
-					new object[] { 3 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value(1) },
+					new[] { QueryExpression.Value(2) },
+					new[] { QueryExpression.Value(3) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
@@ -199,18 +204,19 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 },
-					new object[] { 3 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value(1) },
+					new[] { QueryExpression.Value(2) },
+					new[] { QueryExpression.Value(3) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
@@ -230,18 +236,19 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 },
-					new object[] { 3 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value(1) },
+					new[] { QueryExpression.Value(2) },
+					new[] { QueryExpression.Value(3) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
@@ -261,19 +268,20 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false),
-					QueryExpression.DefineColumn("Requirement", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER,
+						[Requirement] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value", "Requirement" },
-					new object[] { 0x1, 0x1 },
-					new object[] { 0x2, 0x1 },
-					new object[] { 0x1 | 0x4, 0x1 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value"), QueryExpression.Column("Requirement") },
+					new[] { QueryExpression.Value(0x1), QueryExpression.Value(0x1) },
+					new[] { QueryExpression.Value(0x2), QueryExpression.Value(0x1) },
+					new[] { QueryExpression.Value(0x1 | 0x4), QueryExpression.Value(0x1) }
 					));
 
 				var dataSet = new SqlDataSet<Enum_Entity>(sqlDataModel, dataProvider);
@@ -292,18 +300,19 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 },
-					new object[] { 3 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value(1) },
+					new[] { QueryExpression.Value(2) },
+					new[] { QueryExpression.Value(3) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
@@ -322,18 +331,19 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 },
-					new object[] { 3 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value(1) },
+					new[] { QueryExpression.Value(2) },
+					new[] { QueryExpression.Value(3) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
@@ -352,19 +362,20 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false),
-					QueryExpression.DefineColumn("Requirement", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER,
+						[Requirement] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value", "Requirement" },
-					new object[] { 0x1, 0x1 },
-					new object[] { 0x2, 0x1 },
-					new object[] { 0x1 | 0x4, 0x1 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value"), QueryExpression.Column("Requirement") },
+					new[] { QueryExpression.Value(0x1), QueryExpression.Value(0x1) },
+					new[] { QueryExpression.Value(0x2), QueryExpression.Value(0x1) },
+					new[] { QueryExpression.Value(0x1 | 0x4), QueryExpression.Value(0x1) }
 					));
 
 				var dataSet = new SqlDataSet<Enum_Entity>(sqlDataModel, dataProvider);
@@ -384,17 +395,18 @@ namespace DataKit.ORM.UnitTests
 
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					sqlDataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {sqlDataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				dataProvider.ExecuteNonQuery(QueryExpression.Insert(
-					sqlDataModel.StorageModel.DefaultTableName,
-					new[] { "Value" },
-					new object[] { 1 },
-					new object[] { 2 }
+					QueryExpression.Table(sqlDataModel.StorageModel.DefaultTableName),
+					new[] { QueryExpression.Column("Value") },
+					new[] { QueryExpression.Value(1) },
+					new[] { QueryExpression.Value(2) }
 					));
 
 				var dataSet = new SqlDataSet<Flat_Entity>(sqlDataModel, dataProvider);
