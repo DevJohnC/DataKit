@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.0.0-indev</Version>
+    <Authors>John Carruthers</Authors>
+    <Product>DataKit</Product>
+    <Description>Microsoft SQL server provider for DataKit.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/DevJohnC/DataKit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DevJohnC/DataKit</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataKit.SQL\DataKit.SQL.csproj" />
+  </ItemGroup>
+
+</Project>
