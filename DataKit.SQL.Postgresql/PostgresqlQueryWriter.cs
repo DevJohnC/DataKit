@@ -1,4 +1,5 @@
-﻿using DataKit.SQL.Providers;
+﻿using DataKit.SQL.Postgresql.QueryExpressions;
+using DataKit.SQL.Providers;
 using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.SQL.Postgresql
@@ -30,6 +31,13 @@ namespace DataKit.SQL.Postgresql
 				queryText.Append(" * ");
 			else
 				queryText.Append($" \"{identifierQueryExpression.IdentifierName}\" ");
+		}
+
+		public override void WriteExtension(QueryExpression queryExpression, QueryExpressionVisitor queryExpressionVisitor)
+		{
+			if (queryExpression is IPostgresqlExtension postgresqlExtension)
+				postgresqlExtension.Write(this, queryExpressionVisitor);
+			base.WriteExtension(queryExpression, queryExpressionVisitor);
 		}
 	}
 }
