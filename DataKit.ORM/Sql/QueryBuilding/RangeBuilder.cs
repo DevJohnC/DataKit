@@ -1,7 +1,7 @@
 ﻿using DataKit.ORM.Schema;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,9 +29,52 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			_tableIdentifier = valueConverter.TableIdentifier;
 		}
 
-		public SqlExpression<TEntity> BuildLimit() => _limit;
+		private IEnumerable<JoinBuilder<TEntity>> GetJoins()
+		{
+			if (_limit?.RequiresJoins == true)
+			{
+				foreach (var join in _limit.Joins)
+					yield return join;
+			}
 
-		public SqlExpression<TEntity> BuildOffset() => _offset;
+			if (_offset?.RequiresJoins == true)
+			{
+				foreach (var join in _offset.Joins)
+					yield return join;
+			}
+		}
+
+		public SqlExpression<TEntity> Build()
+		{
+			if (_limit != null)
+			{
+				if (_offset == null)
+				{
+					//  limit only
+					return new SqlExpression<TEntity>(
+						QueryExpression.Limit(_limit.QueryExpression),
+						_limit.Joins
+					);
+				}
+				else
+				{
+					//  limit and offset
+					return new SqlExpression<TEntity>(
+						QueryExpression.Limit(_limit.QueryExpression, _offset.QueryExpression),
+						GetJoins().ToArray()
+					);
+				}
+			}
+			else if (_offset != null)
+			{
+				//  offset without a limit
+				return new SqlExpression<TEntity>(
+					QueryExpression.Limit(QueryExpression.Value(int.MaxValue), _offset.QueryExpression),
+					_offset.Joins
+					);
+			}
+			return null;
+		}
 
 		public void Limit<TValue>(SqlValueExpression<TEntity, TValue> expression)
 		{

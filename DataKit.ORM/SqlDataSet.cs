@@ -263,7 +263,7 @@ namespace DataKit.ORM
 				if (!_transformation(bindingContext, entityValue, out var storeValue))
 					throw new Exception("Failed to read primary key field.");
 
-				conditionBuilder.AndAlso(_storageField, ComparisonOperator.AreEqual, (TStoreType)storeValue);
+				conditionBuilder.AndAlso(_storageField, SqlComparisonOperator.AreEqual, (TStoreType)storeValue);
 			}
 		}
 	}

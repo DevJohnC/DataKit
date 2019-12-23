@@ -12,6 +12,9 @@ using DataKit.ORM.Sql.Mapping;
 using DataKit.ORM.Sql.QueryBuilding;
 using DataKit.SQL.Providers;
 using DataKit.SQL.QueryExpressions;
+#if NETSTANDARD2_1
+using System.Runtime.CompilerServices;
+#endif
 using IQueryProvider = DataKit.SQL.Providers.IQueryProvider;
 
 namespace DataKit.ORM.Sql
@@ -68,7 +71,7 @@ namespace DataKit.ORM.Sql
 			return _self;
 		}
 
-		public TSelf AndHaving<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public TSelf AndHaving<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			QueryBuilder.AndHaving(field, comparisonType, value);
 			return _self;
@@ -86,7 +89,7 @@ namespace DataKit.ORM.Sql
 			return _self;
 		}
 
-		public TSelf AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public TSelf AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			QueryBuilder.AndWhere(field, comparisonType, value);
 			return _self;
@@ -206,7 +209,7 @@ namespace DataKit.ORM.Sql
 			return _self;
 		}
 
-		public TSelf OrHaving<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public TSelf OrHaving<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			QueryBuilder.OrHaving(field, comparisonType, value);
 			return _self;
@@ -224,7 +227,7 @@ namespace DataKit.ORM.Sql
 			return _self;
 		}
 
-		public TSelf OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public TSelf OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			QueryBuilder.OrWhere(field, comparisonType, value);
 			return _self;
@@ -242,7 +245,7 @@ namespace DataKit.ORM.Sql
 		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.AndHaving(Expression<Func<TEntity, bool>> conditionExpression)
 			=> AndHaving(conditionExpression);
 
-		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.AndHaving<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.AndHaving<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> AndHaving(field, comparisonType, value);
 
 		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere(SqlValueExpression<TEntity, bool> conditionExpression)
@@ -251,7 +254,7 @@ namespace DataKit.ORM.Sql
 		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere(Expression<Func<TEntity, bool>> conditionExpression)
 			=> AndWhere(conditionExpression);
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> AndWhere(field, comparisonType, value);
 
 		IGroupByQueryBuilder<TEntity> IGroupByQueryBuilder<TEntity>.GroupBy<TValue>(SqlValueExpression<TEntity, TValue> expression)
@@ -311,7 +314,7 @@ namespace DataKit.ORM.Sql
 		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.OrHaving(Expression<Func<TEntity, bool>> conditionExpression)
 			=> OrHaving(conditionExpression);
 
-		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.OrHaving<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.OrHaving<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> OrHaving(field, comparisonType, value);
 
 		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere(SqlValueExpression<TEntity, bool> conditionExpression)
@@ -320,7 +323,7 @@ namespace DataKit.ORM.Sql
 		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere(Expression<Func<TEntity, bool>> conditionExpression)
 			=> OrWhere(conditionExpression);
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> OrWhere(field, comparisonType, value);
 
 		IQueryBuilder<TEntity> IQueryBuilder<TEntity>.Table(string tableName)
@@ -520,7 +523,7 @@ namespace DataKit.ORM.Sql
 
 		protected abstract void InjectSingle(QueryResult queryResult, TResult instance);
 
-		QueryExpression ISqlBatchableOperation<TResult>.BuildQuery()
+		ExecutableQueryExpression ISqlBatchableOperation<TResult>.BuildQuery()
 			=> BuildQuery();
 
 		ISqlBatchProcessor<TResult> ISqlBatchableOperation<TResult>.GetSingleBatchProcessor()

@@ -54,20 +54,17 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		protected void AddFieldAssignment(ColumnIdentifierQueryExpression columnExpression, QueryExpression valueExpression)
 		{
-			_fieldAssignments.RemoveAll(q => q.Column.ColumnName == columnExpression.IdentifierName);
+			_fieldAssignments.RemoveAll(q => q.Column.IdentifierName == columnExpression.IdentifierName);
 			_fieldAssignments.Add((columnExpression, valueExpression));
 		}
 
-		private IEnumerable<AssignColumnExpression> GetAssignColumnExpressions()
+		public Assignments Build()
 		{
-			foreach (var fieldAssignment in _fieldAssignments)
-			{
-				yield return QueryExpression.Assign(fieldAssignment.Column.ColumnName, fieldAssignment.ValueExpression);
-			}
+			return new Assignments(
+				_fieldAssignments.Select(q => q.Column).ToArray(),
+				_fieldAssignments.Select(q => q.ValueExpression).ToArray()
+				);
 		}
-
-		public AssignColumnExpression[] Build()
-			=> GetAssignColumnExpressions().ToArray();
 
 		public void SetDefault(SqlStorageField storageField)
 		{
@@ -226,6 +223,19 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			{
 				return visitor.VisitExtension(this);
 			}
+		}
+
+		public class Assignments
+		{
+			public Assignments(ColumnIdentifierQueryExpression[] columns, QueryExpression[] row)
+			{
+				Columns = columns ?? throw new ArgumentNullException(nameof(columns));
+				Row = row ?? throw new ArgumentNullException(nameof(row));
+			}
+
+			public ColumnIdentifierQueryExpression[] Columns { get; }
+
+			public QueryExpression[] Row { get; }
 		}
 	}
 }

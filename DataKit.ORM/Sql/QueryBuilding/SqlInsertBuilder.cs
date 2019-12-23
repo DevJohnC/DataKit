@@ -93,14 +93,12 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		public override ExecutableQueryExpression BuildQuery()
 		{
-			var row = _assignments.Build();
-			var columnNames = row?.Select(q => q.Column.ColumnName).ToArray() ?? new string[0];
-			var values = row?.Select(q => q.Expression).ToArray() ?? new QueryExpression[0];
+			var assignments = _assignments.Build();
 
 			return QueryExpression.Insert(
-				_tableName,
-				columnNames,
-				values
+				QueryExpression.Table(_tableName),
+				assignments.Columns,
+				assignments.Row
 				);
 		}
 	}

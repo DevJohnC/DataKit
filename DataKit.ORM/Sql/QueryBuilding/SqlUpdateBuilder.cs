@@ -42,7 +42,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		public override ExecutableQueryExpression BuildQuery()
 		{
 			var where = _whereBuilder.Build();
-			var row = _assignments.Build();
+			var assignments = _assignments.Build();
 
 			if (where?.RequiresJoins == true)
 				throw new InvalidOperationException("Expressions that require joins aren't valid for DELETE statements.");
@@ -50,7 +50,8 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			return QueryExpression.Update(
 				QueryExpression.Table(_tableName),
 				where: where?.QueryExpression,
-				assignments: row
+				columns: assignments.Columns,
+				values: assignments.Row
 				);
 		}
 
@@ -90,22 +91,22 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere(Expression<Func<TEntity, bool>> conditionExpression)
 			=> OrWhere(conditionExpression);
 
-		public SqlUpdateBuilder<TEntity> AndWhere<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlUpdateBuilder<TEntity> AndWhere<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_whereBuilder.AndAlso(field, comparisonType, value);
 			return this;
 		}
 
-		public SqlUpdateBuilder<TEntity> OrWhere<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlUpdateBuilder<TEntity> OrWhere<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_whereBuilder.OrElse(field, comparisonType, value);
 			return this;
 		}
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> AndWhere(field, comparisonType, value);
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> OrWhere(field, comparisonType, value);
 
 		public SqlUpdateBuilder<TEntity> Set<TProperty>(Expression<Func<TEntity, TProperty>> fieldSelector, TProperty value)

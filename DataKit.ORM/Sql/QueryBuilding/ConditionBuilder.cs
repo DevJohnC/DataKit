@@ -49,9 +49,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		public void AndAlso(SqlValueExpression<TEntity, bool> conditionExpression)
 		{
-			_expression = QueryExpression.CombineConditions(
-				_expression,
-				ConditionType.AndAlso,
+			_expression = _expression.AndAlso(
 				conditionExpression.QueryExpression
 				);
 			AddJoins(conditionExpression.Joins);
@@ -60,7 +58,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		public void AndAlso(Expression<Func<TEntity, bool>> conditionExpression)
 			=> AndAlso(_conditionConveter.ConvertClause(conditionExpression));
 
-		public void AndAlso<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public void AndAlso<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			if (field.RequiresJoin)
 			{
@@ -68,10 +66,8 @@ namespace DataKit.ORM.Sql.QueryBuilding
 					AddJoin(joinBuilder);
 			}
 
-			_expression = QueryExpression.CombineConditions(
-				_expression,
-				ConditionType.AndAlso,
-				QueryExpression.Compare(
+			_expression = _expression.AndAlso(
+				CreateComparison(
 					QueryExpression.Column(field.ColumnName),
 					comparisonType,
 					QueryExpression.Value(value)
@@ -80,9 +76,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		public void OrElse(SqlValueExpression<TEntity, bool> conditionExpression)
 		{
-			_expression = QueryExpression.CombineConditions(
-				_expression,
-				ConditionType.OrElse,
+			_expression = _expression.OrElse(
 				conditionExpression.QueryExpression
 				);
 			AddJoins(conditionExpression.Joins);
@@ -91,7 +85,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		public void OrElse(Expression<Func<TEntity, bool>> conditionExpression)
 			=> OrElse(_conditionConveter.ConvertClause(conditionExpression));
 
-		public void OrElse<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public void OrElse<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			if (field.RequiresJoin)
 			{
@@ -99,10 +93,8 @@ namespace DataKit.ORM.Sql.QueryBuilding
 					AddJoin(joinBuilder);
 			}
 
-			_expression = QueryExpression.CombineConditions(
-				_expression,
-				ConditionType.OrElse,
-				QueryExpression.Compare(
+			_expression = _expression.OrElse(
+				CreateComparison(
 					QueryExpression.Column(field.ColumnName),
 					comparisonType,
 					QueryExpression.Value(value)
@@ -114,6 +106,28 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			if (_expression == null)
 				return null;
 			return new SqlValueExpression<TEntity, bool>(_expression, _joinBuilders.ToArray());
+		}
+
+		private static QueryExpression CreateComparison(QueryExpression left, SqlComparisonOperator comparisonType, QueryExpression right)
+		{
+			switch (comparisonType)
+			{
+				case SqlComparisonOperator.AreEqual:
+					return QueryExpression.AreEqual(left, right);
+				case SqlComparisonOperator.AreNotEqual:
+					return QueryExpression.AreNotEqual(left, right);
+				case SqlComparisonOperator.GreaterThan:
+					return QueryExpression.GreaterThan(left, right);
+				case SqlComparisonOperator.GreaterThanOrEqualTo:
+					return QueryExpression.GreaterThanOrEqualTo(left, right);
+				case SqlComparisonOperator.LessThan:
+					return QueryExpression.LessThan(left, right);
+				case SqlComparisonOperator.LessThanOrEqualTo:
+					return QueryExpression.LessThanOrEqualTo(left, right);
+				case SqlComparisonOperator.Like:
+					return QueryExpression.Like(left, right);
+			}
+			throw new InvalidOperationException();
 		}
 	}
 }

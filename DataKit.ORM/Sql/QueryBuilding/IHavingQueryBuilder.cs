@@ -14,12 +14,12 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		IHavingQueryBuilder<TEntity> AndHaving(Expression<Func<TEntity, bool>> conditionExpression);
 
-		IHavingQueryBuilder<TEntity> AndHaving<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value);
+		IHavingQueryBuilder<TEntity> AndHaving<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value);
 
 		IHavingQueryBuilder<TEntity> OrHaving(SqlValueExpression<TEntity, bool> conditionExpression);
 
 		IHavingQueryBuilder<TEntity> OrHaving(Expression<Func<TEntity, bool>> conditionExpression);
 
-		IHavingQueryBuilder<TEntity> OrHaving<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value);
+		IHavingQueryBuilder<TEntity> OrHaving<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value);
 	}
 }

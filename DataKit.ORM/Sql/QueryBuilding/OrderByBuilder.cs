@@ -28,7 +28,9 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		public void OrderBy<TValue>(SqlValueExpression<TEntity, TValue> expression)
 		{
-			_expressions.Add(expression);
+			_expressions.Add(new SqlValueExpression<TEntity, TValue>(
+				QueryExpression.OrderBy(expression.QueryExpression), expression.Joins
+				));
 		}
 
 		public void OrderBy<TValue>(Expression<Func<TEntity, TValue>> expression)
@@ -58,9 +60,8 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		public void OrderByDescending<TValue>(SqlValueExpression<TEntity, TValue> expression)
 		{
-			_expressions.Add(new SqlExpression<TEntity>(
-				QueryExpression.Descending(expression.QueryExpression),
-				expression.Joins
+			_expressions.Add(new SqlValueExpression<TEntity, TValue>(
+				QueryExpression.OrderByDescending(expression.QueryExpression), expression.Joins
 				));
 		}
 

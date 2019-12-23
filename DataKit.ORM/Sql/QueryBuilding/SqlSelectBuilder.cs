@@ -1,9 +1,7 @@
 ﻿using DataKit.Mapping;
-using DataKit.Mapping.Binding;
-using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +68,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 				.ToArray();
 		}
 
-		public override QueryExpression BuildQuery()
+		public override ExecutableQueryExpression BuildQuery()
 		{
 			var projectionExpressions = _projectionBuilder.ProjectionExpressions.ToArray();
 			if (projectionExpressions.Length < 1)
@@ -78,15 +76,14 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 			var where = _whereBuilder.Build();
 			var having = _havingBuilder.Build();
-			var limit = _rangeBuilder.BuildLimit();
-			var offset = _rangeBuilder.BuildOffset();
+			var limit = _rangeBuilder.Build();
 			var groupBy = _groupByBuilder.Build();
 			var orderBy = _orderByBuilder.Build();
 
-			var groupByExpressions = groupBy?.Select(q => q.QueryExpression).ToArray();
+			var groupByExpressions = groupBy?.Select(q => q.QueryExpression).OfType<GroupByQueryExpression>().ToArray();
 			var groupByJoins = groupBy?.Where(q => q.RequiresJoins).SelectMany(q => q.Joins).ToArray();
 
-			var orderByExpressions = orderBy?.Select(q => q.QueryExpression).ToArray();
+			var orderByExpressions = orderBy?.Select(q => q.QueryExpression).OfType<OrderByQueryExpression>().ToArray();
 			var orderByJoins = orderBy?.Where(q => q.RequiresJoins).SelectMany(q => q.Joins).ToArray();
 
 			var joins = ConcatUniqueJoins(
@@ -94,7 +91,6 @@ namespace DataKit.ORM.Sql.QueryBuilding
 				where?.Joins,
 				having?.Joins,
 				limit?.Joins,
-				offset?.Joins,
 				groupByJoins,
 				orderByJoins
 				);
@@ -106,8 +102,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 				joins: builtJoins,
 				where: where?.QueryExpression,
 				having: having?.QueryExpression,
-				limit: limit?.QueryExpression,
-				offset: offset?.QueryExpression,
+				limit: limit?.QueryExpression as LimitQueryExpression,
 				orderBy: orderByExpressions,
 				groupBy: groupByExpressions
 				);
@@ -158,22 +153,22 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere(Expression<Func<TEntity, bool>> conditionExpression)
 			=> OrWhere(conditionExpression);
 
-		public SqlSelectBuilder<TEntity> AndWhere<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlSelectBuilder<TEntity> AndWhere<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_whereBuilder.AndAlso(field, comparisonType, value);
 			return this;
 		}
 
-		public SqlSelectBuilder<TEntity> OrWhere<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlSelectBuilder<TEntity> OrWhere<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_whereBuilder.OrElse(field, comparisonType, value);
 			return this;
 		}
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> AndWhere(field, comparisonType, value);
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> OrWhere(field, comparisonType, value);
 
 		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.AndHaving(SqlValueExpression<TEntity, bool> conditionExpression)
@@ -182,7 +177,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.AndHaving(Expression<Func<TEntity, bool>> conditionExpression)
 			=> AndHaving(conditionExpression);
 
-		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.AndHaving<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.AndHaving<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> AndHaving(field, comparisonType, value);
 
 		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.OrHaving(SqlValueExpression<TEntity, bool> conditionExpression)
@@ -191,7 +186,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.OrHaving(Expression<Func<TEntity, bool>> conditionExpression)
 			=> OrHaving(conditionExpression);
 
-		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.OrHaving<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IHavingQueryBuilder<TEntity> IHavingQueryBuilder<TEntity>.OrHaving<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> OrHaving(field, comparisonType, value);
 
 		public SqlSelectBuilder<TEntity> AndHaving(SqlValueExpression<TEntity, bool> conditionExpression)
@@ -206,7 +201,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			return this;
 		}
 
-		public SqlSelectBuilder<TEntity> AndHaving<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlSelectBuilder<TEntity> AndHaving<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_havingBuilder.AndAlso(field, comparisonType, value);
 			return this;
@@ -224,7 +219,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			return this;
 		}
 
-		public SqlSelectBuilder<TEntity> OrHaving<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlSelectBuilder<TEntity> OrHaving<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_havingBuilder.OrElse(field, comparisonType, value);
 			return this;
