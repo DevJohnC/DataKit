@@ -2,8 +2,8 @@
 using System.Linq.Expressions;
 using DataKit.ORM.Sql.Expressions;
 using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
-using Silk.Data.SQL.Providers;
+using DataKit.SQL.Providers;
+using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.ORM.Sql
 {
@@ -64,25 +64,25 @@ namespace DataKit.ORM.Sql
 		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere(Expression<Func<TEntity, bool>> conditionExpression)
 			=> OrWhere(conditionExpression);
 
-		public SqlDeleteOperation<TEntity> AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlDeleteOperation<TEntity> AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_queryBuilder.AndWhere(field, comparisonType, value);
 			return this;
 		}
 
-		public SqlDeleteOperation<TEntity> OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlDeleteOperation<TEntity> OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_queryBuilder.OrWhere(field, comparisonType, value);
 			return this;
 		}
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> AndWhere(field, comparisonType, value);
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> OrWhere(field, comparisonType, value);
 
-		protected override QueryExpression BuildQuery()
+		protected override ExecutableQueryExpression BuildQuery()
 			=> _queryBuilder.BuildQuery();
 	}
 }

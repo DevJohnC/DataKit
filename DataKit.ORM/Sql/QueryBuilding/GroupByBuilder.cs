@@ -1,7 +1,7 @@
 ﻿using DataKit.ORM.Schema;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,8 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		public void GroupBy<TValue>(SqlValueExpression<TEntity, TValue> expression)
 		{
-			_expressions.Add(expression);
+			_expressions.Add(new SqlValueExpression<TEntity, TValue>(
+				QueryExpression.GroupBy(expression.QueryExpression), expression.Joins));
 		}
 
 		public void GroupBy<TValue>(Expression<Func<TEntity, TValue>> expression)

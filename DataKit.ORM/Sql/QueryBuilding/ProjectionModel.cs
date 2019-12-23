@@ -3,7 +3,7 @@ using DataKit.Mapping.Binding;
 using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,9 +54,9 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		public Mapping<TypeModel<TEntity>, PropertyField, TypeModel<TView>, PropertyField> EntityToViewMapping { get; }
 
-		public (IReadOnlyDictionary<string, AliasExpression> Fields, IReadOnlyList<JoinBuilder<TEntity>> RequiredJoins) GetProjectedFields(IAliasIdentifier tableIdentifier)
+		public (IReadOnlyDictionary<string, AsOperatorQueryExpression> Fields, IReadOnlyList<JoinBuilder<TEntity>> RequiredJoins) GetProjectedFields(IAliasIdentifier tableIdentifier)
 		{
-			var aliasedFields = new Dictionary<string, AliasExpression>();
+			var aliasedFields = new Dictionary<string, AsOperatorQueryExpression>();
 			var joinBuilders = new List<JoinBuilder<TEntity>>();
 			var dataSchema = DataModel.DataSchema;
 
@@ -84,9 +84,9 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 				aliasedFields.Add(
 					fieldAlias,
-					new AliasExpression(
+					QueryExpression.As(
 						new ColumnWithAliasSourceQueryExpression(columnName, sourceIdentifier, fieldBinding.SourceField),
-						fieldAlias)
+						fieldAlias, out var _)
 				);
 			}
 

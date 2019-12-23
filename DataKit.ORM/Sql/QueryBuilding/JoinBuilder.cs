@@ -1,6 +1,6 @@
 ﻿using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.ORM.Sql.QueryBuilding
 {
@@ -37,25 +37,24 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			_rightAlias = rightAlias;
 		}
 
-		public JoinExpression Build()
+		public JoinQueryExpression Build()
 		{
-			var rightIdentifier = new AliasIdentifierExpression(((IAliasIdentifier)this).AliasIdentifier);
-			var leftIdentifier = new AliasIdentifierExpression(Left.AliasIdentifier);
+			var rightIdentifier = QueryExpression.AliasReference(((IAliasIdentifier)this).AliasIdentifier);
+			var leftIdentifier = QueryExpression.AliasReference(Left.AliasIdentifier);
 
 			var onCondition = default(QueryExpression);
 			foreach (var columnPair in ColumnPairs)
 			{
-				var newCondition = QueryExpression.Compare(
+				var newCondition = QueryExpression.AreEqual(
 						QueryExpression.Column(columnPair.LeftColumnName, leftIdentifier),
-						ComparisonOperator.AreEqual,
 						QueryExpression.Column(columnPair.RightColumnName, rightIdentifier)
 						);
-				onCondition = QueryExpression.CombineConditions(onCondition, ConditionType.AndAlso, newCondition);
+				onCondition = onCondition.AndAlso(newCondition);
 			}
 
 			return QueryExpression.Join(
-				QueryExpression.Alias(
-					new AliasIdentifierExpression(Right.AliasIdentifier), rightIdentifier.Identifier
+				QueryExpression.As(
+					QueryExpression.AliasReference(Right.AliasIdentifier), rightIdentifier.IdentifierName, out var _
 					),
 				onCondition,
 				Direction

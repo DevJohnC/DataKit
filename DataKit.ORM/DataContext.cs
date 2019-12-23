@@ -1,7 +1,7 @@
 ﻿using DataKit.Modelling;
 using DataKit.ORM.Schema;
 using DataKit.ORM.Sql;
-using Silk.Data.SQL.Providers;
+using DataKit.SQL.Providers;
 using System;
 using System.Threading.Tasks;
 

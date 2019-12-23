@@ -1,5 +1,5 @@
 ﻿using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.ORM.Sql.Expressions
 {

@@ -1,9 +1,9 @@
 ﻿using DataKit.ORM.Schema.Sql;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.ORM.Sql.Expressions
 {
-	public class ColumnWithAliasSourceQueryExpression : QueryExpression, IExtensionExpression
+	public class ColumnWithAliasSourceQueryExpression : NestedIdentifierQueryExpression
 	{
 		public string ColumnName { get; }
 
@@ -11,26 +11,19 @@ namespace DataKit.ORM.Sql.Expressions
 
 		public SqlStorageField SqlStorageField { get; }
 
-		public override ExpressionNodeType NodeType => ExpressionNodeType.Extension;
-
 		public ColumnWithAliasSourceQueryExpression(string columnName, IAliasIdentifier sourceIdentifier,
-			SqlStorageField sqlStorageField)
+			SqlStorageField sqlStorageField) : base(columnName, sourceIdentifier == null ? null : new AliasReferenceQueryExpression(sourceIdentifier))
 		{
 			ColumnName = columnName;
 			SourceIdentifier = sourceIdentifier;
 			SqlStorageField = sqlStorageField;
 		}
 
-		public void Visit(QueryExpressionVisitor visitor)
+		protected override QueryExpression Accept(QueryExpressionVisitor expressionVisitor)
 		{
-			var source = default(AliasIdentifierExpression);
-			if (SourceIdentifier != null)
-				source = new AliasIdentifierExpression(SourceIdentifier.AliasIdentifier);
-
-			visitor.Visit(new ColumnExpression(
-				source,
-				ColumnName
-				));
+			return expressionVisitor.Visit(
+				QueryExpression.Column(ColumnName, ParentIdentifier)
+				);
 		}
 	}
 }

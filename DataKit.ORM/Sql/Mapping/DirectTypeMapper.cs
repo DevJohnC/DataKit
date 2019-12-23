@@ -1,8 +1,7 @@
-﻿using System;
-using DataKit.Mapping;
+﻿using DataKit.Mapping;
 using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Schema.Sql;
-using Silk.Data.SQL.Queries;
+using DataKit.SQL.Providers;
 
 namespace DataKit.ORM.Sql.Mapping
 {

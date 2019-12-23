@@ -1,6 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Silk.Data.SQL;
-using Silk.Data.SQL.Expressions;
+﻿using DataKit.SQL.QueryExpressions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
 namespace DataKit.ORM.UnitTests
@@ -13,11 +12,12 @@ namespace DataKit.ORM.UnitTests
 		{
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					"EntityType",
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE EntityType
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
 
 				var context = DataContext.Create<TestDataContext>(dataProvider);
 				var newEntityOne = new EntityType { Value = 2 };
@@ -48,18 +48,19 @@ namespace DataKit.ORM.UnitTests
 			{
 				var context = DataContext.Create<TestDataContext>(dataProvider);
 
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					context.Entities.DataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false)
-					));
-
-				dataProvider.ExecuteNonQuery(QueryExpression.CreateTable(
-					context.RelatedEntities.DataModel.StorageModel.DefaultTableName,
-					QueryExpression.DefineColumn("Id", SqlDataType.Int(), isNullable: false, isAutoIncrement: true, isPrimaryKey: true),
-					QueryExpression.DefineColumn("Value", SqlDataType.Int(), isNullable: false, isAutoIncrement: false, isPrimaryKey: false),
-					QueryExpression.DefineColumn("Related_Id", SqlDataType.Int(), isNullable: true, isAutoIncrement: false, isPrimaryKey: false)
-					));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {context.Entities.DataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER
+					)"));
+				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
+					CREATE TABLE {context.RelatedEntities.DataModel.StorageModel.DefaultTableName}
+					(
+						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
+						[Value] INTEGER,
+						[Related_Id] INTEGER
+					)"));
 
 				var newEntity = new EntityType
 				{

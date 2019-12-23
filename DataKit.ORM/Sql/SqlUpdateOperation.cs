@@ -2,8 +2,8 @@
 using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Sql.Expressions;
 using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
-using Silk.Data.SQL.Providers;
+using DataKit.SQL.Providers;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Linq.Expressions;
 
@@ -68,22 +68,22 @@ namespace DataKit.ORM.Sql
 		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere(Expression<Func<TEntity, bool>> conditionExpression)
 			=> OrWhere(conditionExpression);
 
-		public SqlUpdateOperation<TEntity> AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlUpdateOperation<TEntity> AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_queryBuilder.AndWhere(field, comparisonType, value);
 			return this;
 		}
 
-		public SqlUpdateOperation<TEntity> OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		public SqlUpdateOperation<TEntity> OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 		{
 			_queryBuilder.OrWhere(field, comparisonType, value);
 			return this;
 		}
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.AndWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> AndWhere(field, comparisonType, value);
 
-		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value)
+		IWhereQueryBuilder<TEntity> IWhereQueryBuilder<TEntity>.OrWhere<TValue>(Schema.Sql.SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value)
 			=> OrWhere(field, comparisonType, value);
 
 		public SqlUpdateOperation<TEntity> Set<TProperty>(Expression<Func<TEntity, TProperty>> fieldSelector, TProperty value)
@@ -129,7 +129,7 @@ namespace DataKit.ORM.Sql
 		IAssignmentQueryBuilder<TEntity> IAssignmentQueryBuilder<TEntity>.Set<TProperty>(Expression<Func<TEntity, TProperty>> fieldSelector, Expression<Func<TEntity, TProperty>> valueExpression)
 			=> Set(fieldSelector, valueExpression);
 
-		protected override QueryExpression BuildQuery()
+		protected override ExecutableQueryExpression BuildQuery()
 			=> _queryBuilder.BuildQuery();
 	}
 }

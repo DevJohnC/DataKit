@@ -1,7 +1,7 @@
 ﻿using DataKit.ORM.Schema;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.QueryBuilding;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using ExpressionType = System.Linq.Expressions.ExpressionType;
 
 namespace DataKit.ORM.Sql.Expressions
 {
@@ -200,15 +201,15 @@ namespace DataKit.ORM.Sql.Expressions
 
 				case ExpressionType.And:
 					return new LinqQueryExpression<TEntity>(
-						new BitwiseOperationQueryExpression(leftExpression, BitwiseOperator.And, rightExpression)
+						QueryExpression.And(leftExpression, rightExpression)
 						);
 				case ExpressionType.ExclusiveOr:
 					return new LinqQueryExpression<TEntity>(
-						new BitwiseOperationQueryExpression(leftExpression, BitwiseOperator.ExclusiveOr, rightExpression)
+						QueryExpression.ExclusiveOr(leftExpression, rightExpression)
 						);
 				case ExpressionType.Or:
 					return new LinqQueryExpression<TEntity>(
-						new BitwiseOperationQueryExpression(leftExpression, BitwiseOperator.Or, rightExpression)
+						QueryExpression.Or(leftExpression, rightExpression)
 						);
 
 				case ExpressionType.AndAlso:
@@ -222,27 +223,27 @@ namespace DataKit.ORM.Sql.Expressions
 
 				case ExpressionType.Equal:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Compare(leftExpression, ComparisonOperator.AreEqual, rightExpression)
+						QueryExpression.AreEqual(leftExpression, rightExpression)
 						);
 				case ExpressionType.NotEqual:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Compare(leftExpression, ComparisonOperator.AreNotEqual, rightExpression)
+						QueryExpression.AreNotEqual(leftExpression, rightExpression)
 						);
 				case ExpressionType.GreaterThan:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Compare(leftExpression, ComparisonOperator.GreaterThan, rightExpression)
+						QueryExpression.GreaterThan(leftExpression, rightExpression)
 						);
 				case ExpressionType.GreaterThanOrEqual:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Compare(leftExpression, ComparisonOperator.GreaterThanOrEqualTo, rightExpression)
+						QueryExpression.GreaterThanOrEqualTo(leftExpression, rightExpression)
 						);
 				case ExpressionType.LessThan:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Compare(leftExpression, ComparisonOperator.LessThan, rightExpression)
+						QueryExpression.LessThan(leftExpression, rightExpression)
 						);
 				case ExpressionType.LessThanOrEqual:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Compare(leftExpression, ComparisonOperator.LessThanOrEqualTo, rightExpression)
+						QueryExpression.LessThanOrEqualTo(leftExpression, rightExpression)
 						);
 
 				default:

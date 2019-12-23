@@ -1,6 +1,5 @@
 ﻿using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
 using System;
 using System.Linq.Expressions;
 
@@ -15,12 +14,12 @@ namespace DataKit.ORM.Sql.QueryBuilding
 
 		IHavingQueryBuilder<TEntity> AndHaving(Expression<Func<TEntity, bool>> conditionExpression);
 
-		IHavingQueryBuilder<TEntity> AndHaving<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value);
+		IHavingQueryBuilder<TEntity> AndHaving<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value);
 
 		IHavingQueryBuilder<TEntity> OrHaving(SqlValueExpression<TEntity, bool> conditionExpression);
 
 		IHavingQueryBuilder<TEntity> OrHaving(Expression<Func<TEntity, bool>> conditionExpression);
 
-		IHavingQueryBuilder<TEntity> OrHaving<TValue>(SqlStorageField<TEntity, TValue> field, ComparisonOperator comparisonType, TValue value);
+		IHavingQueryBuilder<TEntity> OrHaving<TValue>(SqlStorageField<TEntity, TValue> field, SqlComparisonOperator comparisonType, TValue value);
 	}
 }

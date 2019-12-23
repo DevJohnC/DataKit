@@ -2,8 +2,8 @@
 using DataKit.ORM.Schema;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
 using System.Linq;
+using DataKit.SQL.QueryExpressions;
 
 namespace DataKit.ORM.UnitTests
 {
@@ -28,7 +28,7 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => true);
 
-			var checkExpression = valueExpression.QueryExpression as ValueExpression;
+			var checkExpression = valueExpression.QueryExpression as ValueParameterQueryExpression;
 			Assert.IsNotNull(checkExpression);
 			Assert.AreEqual(true, checkExpression.Value);
 		}
@@ -41,7 +41,7 @@ namespace DataKit.ORM.UnitTests
 			var variable = true;
 			var valueExpression = converter.ConvertExpression(q => variable);
 
-			var checkExpression = valueExpression.QueryExpression as ValueExpression;
+			var checkExpression = valueExpression.QueryExpression as ValueParameterQueryExpression;
 			Assert.IsNotNull(checkExpression);
 			Assert.AreEqual(true, checkExpression.Value);
 		}
@@ -54,7 +54,7 @@ namespace DataKit.ORM.UnitTests
 			var obj = new { Value = true };
 			var valueExpression = converter.ConvertExpression(q => obj.Value);
 
-			var checkExpression = valueExpression.QueryExpression as ValueExpression;
+			var checkExpression = valueExpression.QueryExpression as ValueParameterQueryExpression;
 			Assert.IsNotNull(checkExpression);
 			Assert.AreEqual(obj.Value, checkExpression.Value);
 		}
@@ -66,7 +66,7 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = InternalConvert(true);
 
-			var checkExpression = valueExpression.QueryExpression as ValueExpression;
+			var checkExpression = valueExpression.QueryExpression as ValueParameterQueryExpression;
 			Assert.IsNotNull(checkExpression);
 			Assert.AreEqual(true, checkExpression.Value);
 
@@ -146,9 +146,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int == q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as ComparisonExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ComparisonOperator.AreEqual, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.AreEqual, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -158,9 +158,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int != q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as ComparisonExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ComparisonOperator.AreNotEqual, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.AreNotEqual, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -170,9 +170,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int > q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as ComparisonExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ComparisonOperator.GreaterThan, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.GreaterThan, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -182,9 +182,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int >= q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as ComparisonExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ComparisonOperator.GreaterThanOrEqualTo, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.GreaterThanOrEqualTo, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -194,9 +194,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var condition = converter.ConvertExpression(q => q.Child1.Int < q.Child2.Int);
 
-			var checkExpression = condition.QueryExpression as ComparisonExpression;
+			var checkExpression = condition.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ComparisonOperator.LessThan, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.LessThan, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -206,9 +206,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int <= q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as ComparisonExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ComparisonOperator.LessThanOrEqualTo, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.LessThanOrEqualTo, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -218,9 +218,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int + q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as ArithmaticQueryExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ArithmaticOperator.Addition, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.Addition, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -230,9 +230,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int - q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as ArithmaticQueryExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ArithmaticOperator.Subtraction, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.Subtraction, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -242,9 +242,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int * q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as ArithmaticQueryExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ArithmaticOperator.Multiplication, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.Multiplication, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -254,9 +254,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int / q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as ArithmaticQueryExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ArithmaticOperator.Division, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.Division, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -266,9 +266,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int & q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as BitwiseOperationQueryExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(BitwiseOperator.And, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.BitwiseAnd, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -278,9 +278,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int | q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as BitwiseOperationQueryExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(BitwiseOperator.Or, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.BitwiseOr, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -290,9 +290,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int ^ q.Child2.Int);
 
-			var checkExpression = valueExpression.QueryExpression as BitwiseOperationQueryExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(BitwiseOperator.ExclusiveOr, checkExpression.Operator);
+			Assert.AreEqual(BinaryOperator.BitwiseExclusiveOr, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -302,9 +302,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int == 1 && q.Child2.Int == 1);
 
-			var checkExpression = valueExpression.QueryExpression as ConditionExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ConditionType.AndAlso, checkExpression.ConditionType);
+			Assert.AreEqual(BinaryOperator.AndAlso, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -314,9 +314,9 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => q.Child1.Int == 1 || q.Child2.Int == 1);
 
-			var checkExpression = valueExpression.QueryExpression as ConditionExpression;
+			var checkExpression = valueExpression.QueryExpression as BinaryOperatorQueryExpression;
 			Assert.IsNotNull(checkExpression);
-			Assert.AreEqual(ConditionType.OrElse, checkExpression.ConditionType);
+			Assert.AreEqual(BinaryOperator.OrElse, checkExpression.Operator);
 		}
 
 		[TestMethod]
@@ -326,7 +326,7 @@ namespace DataKit.ORM.UnitTests
 			var converter = new ValueConverter<TestEntity>(dataModel, null);
 			var valueExpression = converter.ConvertExpression(q => TestEnum.ValueTwo);
 
-			var checkExpression = valueExpression.QueryExpression as ValueExpression;
+			var checkExpression = valueExpression.QueryExpression as ValueParameterQueryExpression;
 			Assert.IsNotNull(checkExpression);
 			Assert.IsInstanceOfType(checkExpression.Value, typeof(int));
 		}

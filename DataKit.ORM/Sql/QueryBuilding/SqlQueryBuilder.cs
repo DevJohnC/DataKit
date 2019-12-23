@@ -1,6 +1,6 @@
 ﻿using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 
 namespace DataKit.ORM.Sql.QueryBuilding
@@ -9,7 +9,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 	{
 		public SqlServerFunctions ServerFunctions { get; }
 
-		public abstract QueryExpression BuildQuery();
+		public abstract ExecutableQueryExpression BuildQuery();
 	}
 
 	public abstract class SqlQueryBuilder<TEntity> : SqlQueryBuilder

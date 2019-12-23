@@ -1,11 +1,9 @@
 ﻿using DataKit.Mapping;
-using DataKit.Mapping.Binding;
-using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Schema;
 using DataKit.ORM.Schema.Sql;
 using DataKit.ORM.Sql.Expressions;
 using DataKit.ORM.Sql.Mapping;
-using Silk.Data.SQL.Expressions;
+using DataKit.SQL.QueryExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +14,8 @@ namespace DataKit.ORM.Sql.QueryBuilding
 	public class ProjectionBuilder<TEntity>
 		where TEntity : class
 	{
-		private readonly Dictionary<string, AliasExpression> _projectionExpressions
-			= new Dictionary<string, AliasExpression>();
+		private readonly Dictionary<string, AsOperatorQueryExpression> _projectionExpressions
+			= new Dictionary<string, AsOperatorQueryExpression>();
 		private readonly List<JoinBuilder<TEntity>> _joinBuilders = new List<JoinBuilder<TEntity>>();
 		private readonly ValueConverter<TEntity> _valueConverter;
 		private readonly SqlDataModel<TEntity> _dataModel;
@@ -26,7 +24,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		private readonly IObjectFactory _objectFactory;
 
 		public IReadOnlyList<JoinBuilder<TEntity>> Joins => _joinBuilders;
-		public IEnumerable<AliasExpression> ProjectionExpressions => _projectionExpressions.Values;
+		public IEnumerable<AsOperatorQueryExpression> ProjectionExpressions => _projectionExpressions.Values;
 
 		public ProjectionBuilder(SqlDataModel<TEntity> dataModel, ValueConverter<TEntity> valueConverter,
 			IObjectFactory objectFactory = null)
@@ -70,9 +68,9 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			var alias = $"__AutoAlias_{_projectionExpressions.Count}";
 			_projectionExpressions.Add(
 				alias,
-				new AliasExpression(
+				QueryExpression.As(
 					QueryExpression.Column(field.ColumnName),
-					alias)
+					alias, out var _)
 				);
 			if (field.RequiresJoin)
 			{
@@ -90,9 +88,9 @@ namespace DataKit.ORM.Sql.QueryBuilding
 			var alias = $"__AutoAlias_{_projectionExpressions.Count}";
 			_projectionExpressions.Add(
 				alias,
-				new AliasExpression(
+				QueryExpression.As(
 					sqlExpression.QueryExpression,
-					alias)
+					alias, out var _)
 				);
 			if (sqlExpression.RequiresJoins)
 				_joinBuilders.AddRange(sqlExpression.Joins);

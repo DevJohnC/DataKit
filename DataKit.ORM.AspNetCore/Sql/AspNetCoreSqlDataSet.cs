@@ -3,7 +3,7 @@ using DataKit.Mapping.AspNetCore.Mapping;
 using DataKit.Mapping.Binding;
 using DataKit.Modelling.TypeModels;
 using DataKit.ORM.Schema.Sql;
-using Silk.Data.SQL.Providers;
+using IQueryProvider = DataKit.SQL.Providers.IQueryProvider;
 
 namespace DataKit.ORM.AspNetCore.Sql
 {

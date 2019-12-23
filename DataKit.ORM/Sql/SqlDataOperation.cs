@@ -1,5 +1,5 @@
-﻿using Silk.Data.SQL.Expressions;
-using Silk.Data.SQL.Providers;
+﻿using DataKit.SQL.Providers;
+using DataKit.SQL.QueryExpressions;
 using System.Threading.Tasks;
 
 namespace DataKit.ORM.Sql
@@ -19,7 +19,7 @@ namespace DataKit.ORM.Sql
 
 		public SqlServerFunctions ServerFunctions { get; }
 
-		protected abstract QueryExpression BuildQuery();
+		protected abstract ExecutableQueryExpression BuildQuery();
 	}
 
 	/// <summary>
@@ -46,7 +46,7 @@ namespace DataKit.ORM.Sql
 			return QueryProvider.ExecuteNonQueryAsync(BuildQuery());
 		}
 
-		QueryExpression ISqlBatchableOperation.BuildQuery()
+		ExecutableQueryExpression ISqlBatchableOperation.BuildQuery()
 			=> BuildQuery();
 	}
 }

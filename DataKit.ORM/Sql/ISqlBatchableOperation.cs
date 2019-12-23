@@ -1,5 +1,5 @@
-﻿using Silk.Data.SQL.Expressions;
-using Silk.Data.SQL.Queries;
+﻿using DataKit.SQL.Providers;
+using DataKit.SQL.QueryExpressions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,12 +7,12 @@ namespace DataKit.ORM.Sql
 {
 	public interface ISqlBatchableOperation
 	{
-		QueryExpression BuildQuery();
+		ExecutableQueryExpression BuildQuery();
 	}
 
 	public interface ISqlBatchableOperation<TResult>
 	{
-		QueryExpression BuildQuery();
+		ExecutableQueryExpression BuildQuery();
 		ISqlBatchProcessor GetInjectBatchProcessor(TResult instance);
 		ISqlBatchProcessor<TResult> GetSingleBatchProcessor();
 		ISqlBatchProcessor<IReadOnlyList<TResult>> GetListBatchProcessor();
