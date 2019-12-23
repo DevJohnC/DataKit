@@ -2,7 +2,7 @@
 using DataKit.Mapping.AspNetCore.Mapping;
 using DataKit.ORM;
 using DataKit.ORM.AspNetCore;
-using Silk.Data.SQL.Providers;
+using DataKit.SQL.Providers;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
