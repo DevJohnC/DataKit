@@ -21,6 +21,8 @@ APIs for binding and mapping between data types.
 
 APIs for querying SQL data stores. Designed to be type-safe, extensible and capable of batching multiple queries into single round-trips to the database server.
 
+[Learn more about DataKit.ORM](DataKit.ORM/readme.md)
+
 # License
 
 All of `DataKit` is licensed under the MIT license.
