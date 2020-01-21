@@ -25,7 +25,9 @@ namespace DataKit.Modelling.TypeModels
 		{
 			Fields = fields;
 			foreach (var field in fields)
-				_fields.Add(field.FieldName, field);
+				// in lieu of support of multiple fields with the same name we just go
+				// with the last one in the list which should be the most derived
+				_fields[field.FieldName] = field;
 		}
 
 		private static readonly CachedCollection<Type, Type, TypeModel> _cachedCollection =
