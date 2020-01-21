@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.0.0-indev</Version>
+    <Version>1.0.0.0-indev2</Version>
     <Authors>John Carruthers</Authors>
     <Product>DataKit</Product>
     <Description>Postgresql provider for DataKit.</Description>
