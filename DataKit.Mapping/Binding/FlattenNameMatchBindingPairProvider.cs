@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DataKit.Modelling;
 
@@ -10,6 +11,8 @@ namespace DataKit.Mapping.Binding
 		where TSourceModel : IDataModel<TSourceModel, TSourceField>
 		where TTargetModel : IDataModel<TTargetModel, TTargetField>
 	{
+		private static readonly string[] _emptyArray = new string[0];
+
 		public static FlattenNameMatchBindingPairProvider<TSourceModel, TSourceField, TTargetModel, TTargetField> Instance { get; }
 			= new FlattenNameMatchBindingPairProvider<TSourceModel, TSourceField, TTargetModel, TTargetField>();
 
@@ -21,76 +24,72 @@ namespace DataKit.Mapping.Binding
 
 		public IEnumerable<BindingPair<TSourceField, TTargetField>> GetBindingPairs(TSourceModel sourceModel, TTargetModel targetModel)
 		{
-			var flatSource = Flatten<TSourceModel, TSourceField>(sourceModel).ToArray();
-			var flatTarget = Flatten<TTargetModel, TTargetField>(targetModel).ToArray();
+			return ExpandModel(sourceModel, targetModel.Fields);
 
-			foreach (var sourceField in flatSource)
+			IEnumerable<BindingPair<TSourceField, TTargetField>> ExpandModel(
+				TSourceModel model, IReadOnlyList<TTargetField> candidateFields,
+				string[] leftParentPath = null, string[] rightParentPath = null)
 			{
-				foreach (var targetField in flatTarget)
+				foreach (var sourceField in model.Fields)
 				{
-					if (sourceField.FlatFieldPath == targetField.FlatFieldPath)
-					{
-						yield return new BindingPair<TSourceField, TTargetField>(
-							new ModelFieldBindingSource<TSourceField>(sourceField.FieldPath, sourceField.Field),
-							new ModelFieldBindingTarget<TTargetField>(targetField.FieldPath, targetField.Field)
-							);
-					}
+					foreach (var bindingPair in FindBindingPairs(sourceField, targetModel.Fields, leftParentPath, rightParentPath))
+						yield return bindingPair;
 				}
 			}
-		}
 
-		private IEnumerable<FlatField<TModel, TField>> Flatten<TModel, TField>(TModel model)
-			where TModel : IDataModel<TModel, TField>
-			where TField : IModelField<TModel, TField>
-		{
-			foreach (var field in FlattenPath(model.Fields, new string[0], 0))
-				yield return field;
-
-			IEnumerable<FlatField<TModel, TField>> FlattenPath(
-				IEnumerable<TField> fields,
-				string[] path,
-				int depth
-				)
+			IEnumerable<BindingPair<TSourceField, TTargetField>> FindBindingPairs(
+				TSourceField sourceField, IReadOnlyList<TTargetField> candidateFields,
+				string[] leftParentPath = null, string[] rightParentPath = null)
 			{
-				if (depth == MaxDepth)
+				if (leftParentPath == null)
+					leftParentPath = _emptyArray;
+				if (rightParentPath == null)
+					rightParentPath = _emptyArray;
+
+				if (leftParentPath.Length >= MaxDepth || rightParentPath.Length >= MaxDepth)
 					yield break;
 
-				foreach (var field in fields)
+				var leftFieldPath = AppendToPath(leftParentPath, sourceField.FieldName);
+				var leftFieldPathFlat = string.Concat(leftFieldPath);
+
+				foreach (var candidateRightField in candidateFields)
 				{
-					var fieldPath = path.Concat(new string[] { field.FieldName }).ToArray();
+					var rightFieldPath = AppendToPath(rightParentPath, candidateRightField.FieldName);
+					var rightFieldPathFlat = string.Concat(rightFieldPath);
 
-					yield return new FlatField<TModel, TField>(
-						string.Join("", fieldPath),
-						fieldPath,
-						model,
-						field
-						);
-
-					if (field.FieldModel != null)
+					if (rightFieldPathFlat == leftFieldPathFlat)
 					{
-						foreach (var subField in FlattenPath(field.FieldModel.Fields, fieldPath, depth + 1))
-							yield return subField;
+						yield return new BindingPair<TSourceField, TTargetField>(
+							new ModelFieldBindingSource<TSourceField>(leftFieldPath, sourceField),
+							new ModelFieldBindingTarget<TTargetField>(rightFieldPath, candidateRightField)
+							);
+
+						if (sourceField.FieldModel != null)
+						{
+							foreach (var bindingPair in ExpandModel(sourceField.FieldModel, targetModel.Fields,
+								leftFieldPath))
+							{
+								yield return bindingPair;
+							}
+						}
+					}
+					else if (candidateRightField.FieldModel != null && leftFieldPathFlat.StartsWith(rightFieldPathFlat, StringComparison.Ordinal))
+					{
+						foreach (var bindingPair in FindBindingPairs(sourceField, candidateRightField.FieldModel.Fields,
+							leftParentPath, rightFieldPath))
+						{
+							yield return bindingPair;
+						}
 					}
 				}
 			}
-		}
 
-		private class FlatField<TModel, TField>
-			where TModel : IDataModel<TModel, TField>
-			where TField : IModelField<TModel, TField>
-		{
-			public string FlatFieldPath { get; }
-			public string[] FieldPath { get; }
-			public TModel Model { get; }
-			public TField Field { get; }
-
-			public FlatField(string flatFieldPath, string[] fieldPath,
-				TModel model, TField field)
+			string[] AppendToPath(string[] path, string newSegment)
 			{
-				FlatFieldPath = flatFieldPath;
-				FieldPath = fieldPath;
-				Model = model;
-				Field = field;
+				var ret = new string[path.Length + 1];
+				Array.Copy(path, 0, ret, 0, path.Length);
+				ret[path.Length] = newSegment;
+				return ret;
 			}
 		}
 	}
