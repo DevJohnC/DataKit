@@ -109,12 +109,12 @@ namespace DataKit.ORM.Schema.Sql
 					_currentPath.Add(field.FieldName);
 
 					var sqlEntityField = Visit(field) as SqlEntityField<TEntity>;
-					if (sqlEntityField != null)
+					if (sqlEntityField != null && SqlTypeHelper.GetDataType(sqlEntityField.FieldType.Type) == null)
 					{
 						var subModel = Visit(field.FieldModel);
 						sqlEntityField.FieldModel = subModel as SqlEntityModel<TEntity>;
-						fields.Add(sqlEntityField);
 					}
+					fields.Add(sqlEntityField);
 
 					_currentPath.RemoveAt(_currentPath.Count - 1);
 				}

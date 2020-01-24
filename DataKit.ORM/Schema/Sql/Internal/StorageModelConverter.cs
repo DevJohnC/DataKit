@@ -48,8 +48,11 @@ namespace DataKit.ORM.Schema.Sql.Internal
 				if (stateNode.EntityModelState != null)
 					_modelStateStack.Push(stateNode.EntityModelState);
 
-				var subModel = Visit(field.FieldModel) as SqlStorageModel<TEntity>;
-				fields.AddRange(subModel.Fields);
+				if (SqlTypeHelper.GetDataType(field.FieldType.Type) == null)
+				{
+					var subModel = Visit(field.FieldModel) as SqlStorageModel<TEntity>;
+					fields.AddRange(subModel.Fields);
+				}
 
 				if (stateNode.EntityModelState != null)
 					_modelStateStack.Pop();
