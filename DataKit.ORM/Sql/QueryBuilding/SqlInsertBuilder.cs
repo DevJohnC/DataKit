@@ -30,7 +30,7 @@ namespace DataKit.ORM.Sql.QueryBuilding
 		private void PopulateDefaults()
 		{
 			foreach (var storageField in DataModel.StorageModel.Fields
-				.Where(q => !q.IsServerGenerated && q.HasDefaultValue))
+				.Where(q => !q.IsServerGenerated && q.HasDefaultValue && !q.RequiresJoin))
 			{
 				_assignments.SetDefault(storageField);
 			}
