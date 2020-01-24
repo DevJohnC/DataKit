@@ -1,4 +1,5 @@
 ﻿using DataKit.Modelling;
+using System;
 
 namespace DataKit.Mapping
 {
@@ -18,9 +19,11 @@ namespace DataKit.Mapping
 	{
 		T ReadField<T>(TField field);
 
+		bool CanEnterMember(TField field);
 		void EnterMember(TField field);
 		void LeaveMember();
 
+		bool CanEnterEnumerable();
 		void EnterEnumerable();
 		void LeaveEnumerable();
 		bool MoveNext();

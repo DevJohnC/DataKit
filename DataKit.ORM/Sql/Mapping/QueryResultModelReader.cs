@@ -55,5 +55,15 @@ namespace DataKit.ORM.Sql.Mapping
 				throw new System.InvalidOperationException("Attempting to read an unsupported data type from query result.");
 			return reader(_queryResult, ord);
 		}
+
+		public bool CanEnterMember(SqlStorageField<TEntity> field)
+		{
+			return true;
+		}
+
+		public bool CanEnterEnumerable()
+		{
+			return true;
+		}
 	}
 }

@@ -8,6 +8,27 @@ namespace DataKit.Mapping.UnitTests
 	public class TypeMappingTests
 	{
 		[TestMethod]
+		public void Can_Map_With_Nulls_And_Leave_Defaults()
+		{
+			var mapping = new TypeBindingBuilder<Source, Target>()
+				.Bind(t => t.Nested.FlatValue, s => s.Nested.FlatValue) // will be null when mapped
+				.Bind(t => t.ValueType, s => s.ValueType) // will be mapped after the null is hit
+				.BuildBinding()
+				.BuildMapping();
+
+			var source = new Source { ValueType = 5 };
+			var target = new Target();
+
+			var sourceReader = new ObjectDataModelReader<Source>(source);
+			var targetWriter = new ObjectDataModelWriter<Target>(target);
+
+			mapping.Run(sourceReader, targetWriter);
+
+			Assert.IsNull(target.Nested);
+			Assert.AreEqual(source.ValueType, target.ValueType);
+		}
+
+		[TestMethod]
 		public void Can_Map_Top_Values_Between_Objects()
 		{
 			var mapping = new TypeBindingBuilder<Source, Target>()

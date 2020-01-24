@@ -50,6 +50,25 @@ namespace DataKit.Mapping
 			return (T)reader(_objectStack.Peek().Object);
 		}
 
+		public bool CanEnterMember(PropertyField field)
+		{
+			if (field == null)
+				throw new ArgumentNullException(nameof(field));
+
+			if (!field.CanRead)
+				return false;
+
+			var reader = _objectStack.Peek()
+				.Reader
+				.GetReader(field);
+
+			var instance = reader(_objectStack.Peek().Object);
+			if (instance == null)
+				return false;
+
+			return true;
+		}
+
 		public void EnterMember(PropertyField field)
 		{
 			EnsureFieldReadable(field);
@@ -81,6 +100,15 @@ namespace DataKit.Mapping
 				throw new InvalidOperationException("Current member is not enumerable.");
 
 			return enumerator.MoveNext();
+		}
+
+		public bool CanEnterEnumerable()
+		{
+			var currentItem = _objectStack.Peek();
+			if (!currentItem.TypeModel.Type.IsEnumerable)
+				return false;
+
+			return true;
 		}
 
 		public void EnterEnumerable()
