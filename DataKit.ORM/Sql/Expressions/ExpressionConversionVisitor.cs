@@ -164,6 +164,20 @@ namespace DataKit.ORM.Sql.Expressions
 			throw new InvalidOperationException("Unable to execute non-server method that requires an entity instance.");
 		}
 
+		private IEnumerable<JoinBuilder<TEntity>> ConcatJoinBuilders(
+			params IEnumerable<JoinBuilder<TEntity>>[] joinBuildersArray
+			)
+		{
+			foreach (var collection in joinBuildersArray)
+			{
+				if (collection == null)
+					continue;
+
+				foreach (var joinBuilder in collection)
+					yield return joinBuilder;
+			}
+		}
+
 		protected override Expression VisitBinary(BinaryExpression node)
 		{
 			var left = Visit(node.Left) as LinqQueryExpression<TEntity>;
@@ -182,68 +196,83 @@ namespace DataKit.ORM.Sql.Expressions
 				case ExpressionType.AddChecked:
 				case ExpressionType.Add:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Add(leftExpression, rightExpression)
+						QueryExpression.Add(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.SubtractChecked:
 				case ExpressionType.Subtract:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Subtract(leftExpression, rightExpression)
+						QueryExpression.Subtract(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.MultiplyChecked:
 				case ExpressionType.Multiply:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Multiply(leftExpression, rightExpression)
+						QueryExpression.Multiply(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.Divide:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Divide(leftExpression, rightExpression)
+						QueryExpression.Divide(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 
 				case ExpressionType.And:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.And(leftExpression, rightExpression)
+						QueryExpression.And(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.ExclusiveOr:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.ExclusiveOr(leftExpression, rightExpression)
+						QueryExpression.ExclusiveOr(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.Or:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.Or(leftExpression, rightExpression)
+						QueryExpression.Or(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 
 				case ExpressionType.AndAlso:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.AndAlso(leftExpression, rightExpression)
+						QueryExpression.AndAlso(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.OrElse:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.OrElse(leftExpression, rightExpression)
+						QueryExpression.OrElse(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 
 				case ExpressionType.Equal:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.AreEqual(leftExpression, rightExpression)
+						QueryExpression.AreEqual(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.NotEqual:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.AreNotEqual(leftExpression, rightExpression)
+						QueryExpression.AreNotEqual(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.GreaterThan:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.GreaterThan(leftExpression, rightExpression)
+						QueryExpression.GreaterThan(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.GreaterThanOrEqual:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.GreaterThanOrEqualTo(leftExpression, rightExpression)
+						QueryExpression.GreaterThanOrEqualTo(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.LessThan:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.LessThan(leftExpression, rightExpression)
+						QueryExpression.LessThan(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 				case ExpressionType.LessThanOrEqual:
 					return new LinqQueryExpression<TEntity>(
-						QueryExpression.LessThanOrEqualTo(leftExpression, rightExpression)
+						QueryExpression.LessThanOrEqualTo(leftExpression, rightExpression),
+						ConcatJoinBuilders(left.JoinBuilders, right.JoinBuilders)
 						);
 
 				default:
