@@ -48,6 +48,11 @@ namespace DataKit.ORM.Schema.Sql
 			return new JoinBuilder<TEntity>(this, left, right, rightAlias, JoinDirection.Left, JoinColumns);
 		}
 
+		public IEnumerable<JoinBuilder<TEntity>> CreateJoinChain(DataSchema dataSchema, IAliasIdentifier tableIdentifier)
+		{
+			return CreateJoin(dataSchema, null, tableIdentifier).Select(q => q.Builder);
+		}
+
 		internal IEnumerable<(JoinBuilder<TEntity> Builder, IAliasIdentifier Alias)> CreateJoin(DataSchema dataSchema, SqlStorageField<TEntity> storageField,
 			IAliasIdentifier tableIdentifier)
 		{
