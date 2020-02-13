@@ -7,12 +7,13 @@ namespace DataKit.ORM.Sql
 {
 	public interface ISqlBatchableOperation
 	{
+		IQueryProvider QueryProvider { get; }
+
 		ExecutableQueryExpression BuildQuery();
 	}
 
-	public interface ISqlBatchableOperation<TResult>
+	public interface ISqlBatchableOperation<TResult> : ISqlBatchableOperation
 	{
-		ExecutableQueryExpression BuildQuery();
 		ISqlBatchProcessor GetInjectBatchProcessor(TResult instance);
 		ISqlBatchProcessor<TResult> GetSingleBatchProcessor();
 		ISqlBatchProcessor<IReadOnlyList<TResult>> GetListBatchProcessor();

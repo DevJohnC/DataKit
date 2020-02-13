@@ -523,7 +523,7 @@ namespace DataKit.ORM.Sql
 
 		protected abstract void InjectSingle(QueryResult queryResult, TResult instance);
 
-		ExecutableQueryExpression ISqlBatchableOperation<TResult>.BuildQuery()
+		ExecutableQueryExpression ISqlBatchableOperation.BuildQuery()
 			=> BuildQuery();
 
 		ISqlBatchProcessor<TResult> ISqlBatchableOperation<TResult>.GetSingleBatchProcessor()

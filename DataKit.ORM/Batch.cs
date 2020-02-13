@@ -47,24 +47,21 @@ namespace DataKit.ORM
 			return this;
 		}
 
-		public Batch List<TEntity, TResult>(SqlSelectOperation<TEntity, TResult> selectOperation, out DeferredResult<IReadOnlyList<TResult>> results)
-			where TEntity : class
+		public Batch List<TResult>(ISqlBatchableOperation<TResult> selectOperation, out DeferredResult<IReadOnlyList<TResult>> results)
 		{
 			GetSqlBatchCollection(selectOperation.QueryProvider)
 				.Add(selectOperation, out results);
 			return this;
 		}
 
-		public Batch Single<TEntity, TResult>(SqlSelectOperation<TEntity, TResult> selectOperation, out DeferredResult<TResult> result)
-			where TEntity : class
+		public Batch Single<TResult>(ISqlBatchableOperation<TResult> selectOperation, out DeferredResult<TResult> result)
 		{
 			GetSqlBatchCollection(selectOperation.QueryProvider)
 				.Add(selectOperation, out result);
 			return this;
 		}
 
-		public Batch Inject<TEntity, TResult>(SqlSelectOperation<TEntity, TResult> selectOperation, TResult instance)
-			where TEntity : class
+		public Batch Inject<TResult>(ISqlBatchableOperation<TResult> selectOperation, TResult instance)
 			where TResult : class
 		{
 			GetSqlBatchCollection(selectOperation.QueryProvider)
