@@ -64,7 +64,7 @@ namespace DataKit.Mapping.Binding
 							new ModelFieldBindingTarget<TTargetField>(rightFieldPath, candidateRightField)
 							);
 
-						if (sourceField.FieldModel != null)
+						if (sourceField.FieldModel != null && !sourceField.FieldType.IsPureEnumerable)
 						{
 							foreach (var bindingPair in ExpandModel(sourceField.FieldModel, targetModel.Fields,
 								leftFieldPath))
@@ -73,7 +73,8 @@ namespace DataKit.Mapping.Binding
 							}
 						}
 					}
-					else if (candidateRightField.FieldModel != null && leftFieldPathFlat.StartsWith(rightFieldPathFlat, StringComparison.Ordinal))
+					else if (candidateRightField.FieldModel != null && !sourceField.FieldType.IsPureEnumerable
+						&& leftFieldPathFlat.StartsWith(rightFieldPathFlat, StringComparison.Ordinal))
 					{
 						foreach (var bindingPair in FindBindingPairs(sourceField, candidateRightField.FieldModel.Fields,
 							leftParentPath, rightFieldPath))
