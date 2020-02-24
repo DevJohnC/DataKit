@@ -98,10 +98,10 @@ namespace DataKit.Mapping.ObjectReaderWriter
 		}
 
 		private static List<TData> ConvertToList<TData>(IEnumerable<object> input)
-			=> input.OfType<TData>().ToList();
+			=> input?.OfType<TData>().ToList() ?? default;
 
 		private static TData[] ConvertToArray<TData>(IEnumerable<object> input)
-			=> input.OfType<TData>().ToArray();
+			=> input?.OfType<TData>().ToArray() ?? default;
 
 		public override ReaderDelegate GetReader(PropertyField propertyField)
 			=> _propertyReaders.GetOrCreate(propertyField, propertyField);
