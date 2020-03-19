@@ -12,16 +12,29 @@ namespace DataKit.Mapping.UnitTests.Binding
 		private readonly static TypeModel<TargetModel> TargetTypeModel = TypeModel.GetModelOf<TargetModel>();
 
 		[TestMethod]
-		public void GetBindingPairs_Includes_Candidates_With_Same_Flattened_Path()
+		public void GetBindingPairs_Includes_Candidates_With_Same_Flattened_Path_Left_To_Right()
 		{
 			var provider = new FlattenNameMatchBindingPairProvider<TypeModel, PropertyField, TypeModel, PropertyField>();
 			var bindingPairs = provider.GetBindingPairs(
 				SourceTypeModel, TargetTypeModel);
-			var testPair = bindingPairs.FirstOrDefault(candidate =>
+			var testPairExists = bindingPairs.Any(candidate =>
 				string.Join(".", candidate.Source.Path) == "SubProperty" &&
 				string.Join(".", candidate.Target.Path) == "Sub.Property"
 			);
-			Assert.IsNotNull(testPair, "No binding pair with identical flat paths found.");
+			Assert.IsTrue(testPairExists, "No binding pair with identical flat paths found.");
+		}
+
+		[TestMethod]
+		public void GetBindingPairs_Includes_Candidates_With_Same_Flattened_Path_Right_To_Left()
+		{
+			var provider = new FlattenNameMatchBindingPairProvider<TypeModel, PropertyField, TypeModel, PropertyField>();
+			var bindingPairs = provider.GetBindingPairs(
+				TargetTypeModel, SourceTypeModel);
+			var testPairExists = bindingPairs.Any(candidate =>
+				string.Join(".", candidate.Target.Path) == "SubProperty" &&
+				string.Join(".", candidate.Source.Path) == "Sub.Property"
+			);
+			Assert.IsTrue(testPairExists, "No binding pair with identical flat paths found.");
 		}
 
 		[TestMethod]

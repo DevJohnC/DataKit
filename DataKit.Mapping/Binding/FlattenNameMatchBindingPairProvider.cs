@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DataKit.Modelling;
 
 namespace DataKit.Mapping.Binding
@@ -78,6 +77,15 @@ namespace DataKit.Mapping.Binding
 					{
 						foreach (var bindingPair in FindBindingPairs(sourceField, candidateRightField.FieldModel.Fields,
 							leftParentPath, rightFieldPath))
+						{
+							yield return bindingPair;
+						}
+					}
+					else if (sourceField.FieldModel != null && !candidateRightField.FieldType.IsPureEnumerable &&
+						rightFieldPathFlat.StartsWith(leftFieldPathFlat, StringComparison.Ordinal))
+					{
+						foreach (var bindingPair in ExpandModel(sourceField.FieldModel, targetModel.Fields,
+								leftFieldPath))
 						{
 							yield return bindingPair;
 						}
