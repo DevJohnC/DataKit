@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DataKit.Mapping.Binding;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DataKit.Mapping.UnitTests
 {
@@ -165,6 +167,110 @@ namespace DataKit.Mapping.UnitTests
 			Assert.AreEqual(source.ValueType, target.ValueType);
 		}
 
+		[TestMethod]
+		public void Can_Map_ReadOnly_Collections()
+		{
+			var mapping = new TypeBindingBuilder<Source, Target>()
+				.Bind(t => t.ReadOnlyCollection, s => s.ReadOnlyCollection)
+				.BuildBinding()
+				.BuildMapping();
+
+			var source = new Source
+			{
+				ReadOnlyCollection = new List<CollectionItem> { new CollectionItem { Data = "Hello World" } }
+			};
+			var target = new Target();
+
+			var sourceReader = new ObjectDataModelReader<Source>(source);
+			var targetWriter = new ObjectDataModelWriter<Target>(target);
+
+			mapping.Run(sourceReader, targetWriter);
+
+			Assert.IsTrue(
+				source.ReadOnlyCollection.Select(q => q.Data)
+					.SequenceEqual(target.ReadOnlyCollection.Select(q => q.Data))
+				);
+		}
+
+		[TestMethod]
+		public void Can_Map_Enumerables()
+		{
+			var mapping = new TypeBindingBuilder<Source, Target>()
+				.Bind(t => t.Enumerable, s => s.Enumerable)
+				.BuildBinding()
+				.BuildMapping();
+
+			var source = new Source
+			{
+				Enumerable = new List<CollectionItem> { new CollectionItem { Data = "Hello World" } }
+			};
+			var target = new Target();
+
+			var sourceReader = new ObjectDataModelReader<Source>(source);
+			var targetWriter = new ObjectDataModelWriter<Target>(target);
+
+			mapping.Run(sourceReader, targetWriter);
+
+			Assert.IsTrue(
+				source.Enumerable.Select(q => q.Data)
+					.SequenceEqual(target.Enumerable.Select(q => q.Data))
+				);
+		}
+
+		[TestMethod]
+		public void Can_Map_With_Null_Collection()
+		{
+			var mapping = new TypeBindingBuilder<Source, Target>()
+				.Bind(t => t.ReadOnlyCollection, s => s.ReadOnlyCollection)
+				.BuildBinding()
+				.BuildMapping();
+
+			var source = new Source
+			{
+				ReadOnlyCollection = null
+			};
+			var target = new Target();
+
+			var sourceReader = new ObjectDataModelReader<Source>(source);
+			var targetWriter = new ObjectDataModelWriter<Target>(target);
+
+			mapping.Run(sourceReader, targetWriter);
+
+			Assert.IsNull(target.ReadOnlyCollection);
+		}
+
+		[TestMethod]
+		public void Can_Map_Multiple_Enumerables()
+		{
+			var mapping = new TypeBindingBuilder<Source, Target>()
+				.Bind(t => t.ReadOnlyCollection, s => s.ReadOnlyCollection)
+				.Bind(t => t.Enumerable, s => s.Enumerable)
+				.BuildBinding()
+				.BuildMapping();
+
+			var source = new Source
+			{
+				ReadOnlyCollection = new List<CollectionItem> { new CollectionItem { Data = "Hello World #1" } },
+				Enumerable = new List<CollectionItem> { new CollectionItem { Data = "Hello World #2" } }
+			};
+			var target = new Target();
+
+			var sourceReader = new ObjectDataModelReader<Source>(source);
+			var targetWriter = new ObjectDataModelWriter<Target>(target);
+
+			mapping.Run(sourceReader, targetWriter);
+
+			Assert.IsTrue(
+				source.ReadOnlyCollection.Select(q => q.Data)
+					.SequenceEqual(target.ReadOnlyCollection.Select(q => q.Data))
+				);
+
+			Assert.IsTrue(
+				source.Enumerable.Select(q => q.Data)
+					.SequenceEqual(target.Enumerable.Select(q => q.Data))
+				);
+		}
+
 		private class Source
 		{
 			public string FlatValue { get; set; }
@@ -172,6 +278,10 @@ namespace DataKit.Mapping.UnitTests
 			public int ValueType { get; set; }
 
 			public Source Nested { get; set; }
+
+			public IReadOnlyCollection<CollectionItem> ReadOnlyCollection { get; set; }
+
+			public IEnumerable<CollectionItem> Enumerable { get; set; }
 		}
 
 		private class Target
@@ -181,6 +291,15 @@ namespace DataKit.Mapping.UnitTests
 			public int ValueType { get; set; }
 
 			public Target Nested { get; set; }
+
+			public IReadOnlyCollection<CollectionItem> ReadOnlyCollection { get; set; }
+
+			public IEnumerable<CollectionItem> Enumerable { get; set; }
+		}
+
+		private class CollectionItem
+		{
+			public string Data { get; set; }
 		}
 	}
 }
