@@ -23,19 +23,15 @@ namespace DataKit.ORM
 					var genericArgs = property.PropertyType.GetGenericArguments();
 					if (property.PropertyType.IsSqlDataSetWithEntityAndBusinessTypes())
 					{
-						var sqlEntityConfiguration = new SqlEntityConfiguration(
-							genericArgs[0],
-							genericArgs[1]
-							);
+						var sqlEntityConfiguration = SqlEntityConfiguration.Create(
+							genericArgs[0], genericArgs[1]);
 						AutoConfigureEntityType(sqlEntityConfiguration);
 						schemaBuilder.AddSqlEntity(sqlEntityConfiguration);
 					}
 					else if (property.PropertyType.IsSqlDataSetWithEntityType())
 					{
-						var sqlEntityConfiguration = new SqlEntityConfiguration(
-							null,
-							genericArgs[0]
-							);
+						var sqlEntityConfiguration = SqlEntityConfiguration.Create(
+							genericArgs[0]);
 						AutoConfigureEntityType(sqlEntityConfiguration);
 						schemaBuilder.AddSqlEntity(sqlEntityConfiguration);
 					}

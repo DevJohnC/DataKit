@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace DataKit.ORM.Schema.Sql
 {
-	public class SqlEntityConfiguration
+	public abstract class SqlEntityConfiguration
 	{
 		public Type EntityType { get; }
 
@@ -23,6 +23,18 @@ namespace DataKit.ORM.Schema.Sql
 			EntityType = entityType;
 			BusinessType = businessType;
 			DefaultTableName = EntityType.Name;
+		}
+
+		public static SqlEntityConfiguration Create(Type entityType)
+		{
+			return Activator.CreateInstance(typeof(SqlEntityConfiguration<>)
+				.MakeGenericType(entityType)) as SqlEntityConfiguration;
+		}
+
+		public static SqlEntityConfiguration Create(Type businessType, Type entityType)
+		{
+			return Activator.CreateInstance(typeof(SqlEntityConfiguration<>)
+				.MakeGenericType(businessType, entityType)) as SqlEntityConfiguration;
 		}
 	}
 
