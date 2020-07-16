@@ -25,6 +25,7 @@ namespace DataKit.ORM
 					{
 						var sqlEntityConfiguration = SqlEntityConfiguration.Create(
 							genericArgs[0], genericArgs[1]);
+						sqlEntityConfiguration.DefaultTableName = property.Name;
 						AutoConfigureEntityType(sqlEntityConfiguration);
 						schemaBuilder.AddSqlEntity(sqlEntityConfiguration);
 					}
@@ -32,6 +33,7 @@ namespace DataKit.ORM
 					{
 						var sqlEntityConfiguration = SqlEntityConfiguration.Create(
 							genericArgs[0]);
+						sqlEntityConfiguration.DefaultTableName = property.Name;
 						AutoConfigureEntityType(sqlEntityConfiguration);
 						schemaBuilder.AddSqlEntity(sqlEntityConfiguration);
 					}

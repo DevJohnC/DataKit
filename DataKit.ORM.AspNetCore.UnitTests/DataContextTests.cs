@@ -47,7 +47,7 @@ namespace DataKit.ORM.AspNetCore.UnitTests
 				});
 
 				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
-					CREATE TABLE TestEntity
+					CREATE TABLE Entities
 					(
 						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
 						[Value] INTEGER
@@ -92,7 +92,7 @@ namespace DataKit.ORM.AspNetCore.UnitTests
 				});
 
 				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
-					CREATE TABLE TestEntity
+					CREATE TABLE Entities
 					(
 						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
 						[Value] INTEGER

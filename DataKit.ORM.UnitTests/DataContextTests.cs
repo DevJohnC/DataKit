@@ -22,6 +22,20 @@ namespace DataKit.ORM.UnitTests
 		}
 
 		[TestMethod]
+		public void DataSets_Name_Tables_After_Property_Name()
+		{
+			lock (TestDataContext.Lock)
+			{
+				using (var dataProvider = DataProvider.CreateTestProvider())
+				{
+					TestDataContext.ConfigureEntity = false;
+					var context = DataContext.Create<TestDataContext>(dataProvider);
+					Assert.AreEqual(nameof(context.Entities), context.Entities.DataModel.StorageModel.DefaultTableName);
+				}
+			}
+		}
+
+		[TestMethod]
 		public void Create_Context_Calls_ConfigureSchema_Method()
 		{
 			lock (TestDataContext.Lock)
@@ -58,7 +72,7 @@ namespace DataKit.ORM.UnitTests
 				using (var dataProvider = DataProvider.CreateTestProvider())
 				{
 					dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
-					CREATE TABLE [EntityType]
+					CREATE TABLE [Entities]
 					(
 						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
 						[Value] INTEGER
@@ -91,7 +105,7 @@ namespace DataKit.ORM.UnitTests
 				using (var dataProvider = DataProvider.CreateTestProvider())
 				{
 					dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
-					CREATE TABLE [EntityType]
+					CREATE TABLE [Entities]
 					(
 						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
 						[Value] INTEGER
@@ -132,7 +146,7 @@ namespace DataKit.ORM.UnitTests
 				using (var dataProvider = DataProvider.CreateTestProvider())
 				{
 					dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
-					CREATE TABLE [EntityType]
+					CREATE TABLE [Entities]
 					(
 						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
 						[Value] INTEGER

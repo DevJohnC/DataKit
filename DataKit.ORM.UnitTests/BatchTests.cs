@@ -13,7 +13,7 @@ namespace DataKit.ORM.UnitTests
 			using (var dataProvider = DataProvider.CreateTestProvider())
 			{
 				dataProvider.ExecuteNonQuery(Sqlite3QueryExpression.Raw($@"
-					CREATE TABLE EntityType
+					CREATE TABLE Entities
 					(
 						[Id] INTEGER PRIMARY KEY AUTOINCREMENT,
 						[Value] INTEGER
