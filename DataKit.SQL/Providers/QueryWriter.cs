@@ -331,9 +331,9 @@ namespace DataKit.SQL.Providers
 			)
 		{
 			queryExpressionVisitor.Visit(isInFunctionCallQueryExpression.Expression);
-			queryText.Append(" IN ");
 			if (isInFunctionCallQueryExpression.IsNotIn)
-				queryText.Append("NOT ");
+				queryText.Append(" NOT ");
+			queryText.Append(" IN ");
 			var expressionsAreQueries = isInFunctionCallQueryExpression.InExpressions[0] is ExecutableQueryExpression;
 			if (!expressionsAreQueries)
 				queryText.Append("(");
