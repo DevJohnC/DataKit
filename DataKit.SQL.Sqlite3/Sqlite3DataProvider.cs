@@ -1,6 +1,7 @@
 ﻿using DataKit.SQL.Providers;
 using Microsoft.Data.Sqlite;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Threading;
@@ -65,10 +66,15 @@ namespace DataKit.SQL.Sqlite3
 		{
 			if (_convertGuidsToText && parameters != null)
 			{
+				var replacements = new Dictionary<string, object>();
 				foreach (var kvp in parameters)
 				{
 					if (kvp.Value is Guid)
-						parameters[kvp.Key] = kvp.Value.ToString();
+						replacements[kvp.Key] = kvp.Value.ToString();
+				}
+				foreach (var kvp in replacements)
+				{
+					parameters[kvp.Key] = kvp.Value;
 				}
 			}
 			return base.CreateCommand(dbConnection, sql, parameters);
