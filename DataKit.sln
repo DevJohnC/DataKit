@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataKit.RelationalDatabases
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataKit.RelationalDatabases.Queries", "src\DataKit.RelationalDatabases\DataKit.RelationalDatabases.Queries\DataKit.RelationalDatabases.Queries.csproj", "{EA7BCBAE-4A41-4ED2-9B28-E289B8B58E02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataKit.RelationalDatabases.Sqlite", "src\DataKit.RelationalDatabases\DataKit.RelationalDatabases.Sqlite\DataKit.RelationalDatabases.Sqlite.csproj", "{89F8F36D-B680-4F2E-817E-1AEF29035E4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,6 +16,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8EC24B99-B669-41A5-9F5B-695599222768} = {2CAD19AD-1404-4BAF-94DB-E06BCFF9F6FE}
 		{EA7BCBAE-4A41-4ED2-9B28-E289B8B58E02} = {2CAD19AD-1404-4BAF-94DB-E06BCFF9F6FE}
+		{89F8F36D-B680-4F2E-817E-1AEF29035E4C} = {2CAD19AD-1404-4BAF-94DB-E06BCFF9F6FE}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8EC24B99-B669-41A5-9F5B-695599222768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +27,9 @@ Global
 		{EA7BCBAE-4A41-4ED2-9B28-E289B8B58E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA7BCBAE-4A41-4ED2-9B28-E289B8B58E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA7BCBAE-4A41-4ED2-9B28-E289B8B58E02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89F8F36D-B680-4F2E-817E-1AEF29035E4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89F8F36D-B680-4F2E-817E-1AEF29035E4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89F8F36D-B680-4F2E-817E-1AEF29035E4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89F8F36D-B680-4F2E-817E-1AEF29035E4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

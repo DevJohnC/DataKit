@@ -1,0 +1,3 @@
+namespace DataKit.RelationalDatabases.QueryExpressions;
+
+public sealed record MultipleStatementsQueryExpression(IReadOnlyCollection<QueryExpression> Statements) : QueryExpression;

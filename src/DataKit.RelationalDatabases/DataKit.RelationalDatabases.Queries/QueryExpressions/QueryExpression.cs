@@ -1,5 +1,6 @@
 namespace DataKit.RelationalDatabases.QueryExpressions;
 
-public abstract class QueryExpression
+public abstract record QueryExpression
 {
+    
 }

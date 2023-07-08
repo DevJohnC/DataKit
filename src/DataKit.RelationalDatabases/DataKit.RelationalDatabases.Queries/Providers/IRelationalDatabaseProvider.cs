@@ -3,9 +3,13 @@ namespace DataKit.RelationalDatabases.Providers;
 /// <summary>
 /// Executes queries on a relational database.
 /// </summary>
-public interface IRelationalDatabaseProvider
+public interface IRelationalDatabaseProvider : IDisposable, IAsyncDisposable
 {
-    IEnumerable<Row> Execute(SqlQuery sqlQuery);
+    IEnumerable<RowReader> Execute(SqlQuery sqlQuery);
 
-    IAsyncEnumerable<Row> ExecuteAsync(SqlQuery sqlQuery);
+    IAsyncEnumerable<RowReader> ExecuteAsync(SqlQuery sqlQuery);
+
+    ProviderCommand CreateCommand(SqlQuery sqlQuery);
+
+    Task<ProviderCommand> CreateCommandAsync(SqlQuery sqlQuery, CancellationToken cancellationToken);
 }
