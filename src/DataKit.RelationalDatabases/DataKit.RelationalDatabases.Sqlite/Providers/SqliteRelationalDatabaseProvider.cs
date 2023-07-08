@@ -1,3 +1,4 @@
+using DataKit.RelationalDatabases.QueryExpressions;
 using Microsoft.Data.Sqlite;
 
 namespace DataKit.RelationalDatabases.Providers;
@@ -57,6 +58,11 @@ public sealed class SqliteRelationalDatabaseProvider : IRelationalDatabaseProvid
                 await connectionLease.DisposeAsync();
             throw;
         }
+    }
+
+    public SqlQuery CreateSqlQuery(QueryExpression queryExpression)
+    {
+        return new SqliteQueryWriter().Write(queryExpression);
     }
 
     private SqliteCommand CreateCommand(SqliteConnectionLease connectionLease, SqlQuery sqlQuery)

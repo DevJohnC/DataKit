@@ -1,3 +1,5 @@
+using System.Data.Common;
+
 namespace DataKit.RelationalDatabases;
 
 /// <summary>
@@ -5,10 +7,23 @@ namespace DataKit.RelationalDatabases;
 /// </summary>
 public abstract class RowReader : IDisposable, IAsyncDisposable
 {
-    public abstract bool Read();
+    private readonly DbDataReader _reader;
 
-    public abstract Task<bool> ReadAsync(CancellationToken cancellationToken);
-    
-    public abstract void Dispose();
-    public abstract ValueTask DisposeAsync();
+    protected RowReader(DbDataReader reader)
+    {
+        _reader = reader;
+    }
+
+    public virtual int ReadInt32(int ord)
+    {
+        return _reader.GetInt32(ord);
+    }
+
+    public virtual bool Read() => _reader.Read();
+
+    public virtual Task<bool> ReadAsync(CancellationToken cancellationToken) => _reader.ReadAsync(cancellationToken);
+
+    public virtual void Dispose() => _reader.Dispose();
+
+    public virtual ValueTask DisposeAsync() => _reader.DisposeAsync();
 }

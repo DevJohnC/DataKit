@@ -1,3 +1,5 @@
+using DataKit.RelationalDatabases.QueryExpressions;
+
 namespace DataKit.RelationalDatabases.Providers;
 
 /// <summary>
@@ -12,4 +14,18 @@ public interface IRelationalDatabaseProvider : IDisposable, IAsyncDisposable
     ProviderCommand CreateCommand(SqlQuery sqlQuery);
 
     Task<ProviderCommand> CreateCommandAsync(SqlQuery sqlQuery, CancellationToken cancellationToken);
+
+    SqlQuery CreateSqlQuery(QueryExpression queryExpression);
+
+    IEnumerable<RowReader> Execute(QueryExpression queryExpression)
+    {
+        var sqlQuery = CreateSqlQuery(queryExpression);
+        return Execute(sqlQuery);
+    }
+
+    IAsyncEnumerable<RowReader> ExecuteAsync(QueryExpression queryExpression)
+    {
+        var sqlQuery = CreateSqlQuery(queryExpression);
+        return ExecuteAsync(sqlQuery);
+    }
 }
