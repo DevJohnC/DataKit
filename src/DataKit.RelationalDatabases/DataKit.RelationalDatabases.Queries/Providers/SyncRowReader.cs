@@ -6,6 +6,10 @@ public sealed class SyncRowReader : IEnumerator<RowReader>
 {
     private readonly ProviderCommand _command;
     private readonly RowReader _reader;
+    
+    public RowReader Current => _reader;
+
+    object IEnumerator.Current => Current;
 
     public SyncRowReader(ProviderCommand command, RowReader rowReader)
     {
@@ -22,10 +26,6 @@ public sealed class SyncRowReader : IEnumerator<RowReader>
     {
         throw new NotImplementedException();
     }
-
-    public RowReader Current => _reader;
-
-    object IEnumerator.Current => Current;
 
     public void Dispose()
     {

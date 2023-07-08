@@ -19,7 +19,7 @@ public sealed class SqliteRelationalDatabaseProvider : IRelationalDatabaseProvid
 
     public IAsyncEnumerable<RowReader> ExecuteAsync(SqlQuery sqlQuery)
     {
-        throw new NotImplementedException();
+        return new AsyncQuery(this, sqlQuery);
     }
 
     public ProviderCommand CreateCommand(SqlQuery sqlQuery)
